@@ -242,6 +242,11 @@ class PlayState extends MusicBeatSubState
   public var shits:Int = 0;
 
   /**
+    total played its actually very self explanatory lmao
+  **/
+  public var totalPlayed:Int = 0;
+
+  /**
    * Start at this point in the song once the countdown is done.
    * For example, if `startTimestamp` is `30000`, the song will start at the 30 second mark.
    * Used for chart playtesting or practice.
@@ -872,10 +877,12 @@ class PlayState extends MusicBeatSubState
   }
 
   var ratingFC:String = '';
+  var ratingPercent:Float;
 
   function updateCombo()
   {
     ratingFC = 'Clear';
+    if (shits == 0 && bads == 0 && goods == 0 && sicks == 0 && songMisses == 0) ratingFC = '?';
     if (songMisses < 1)
     {
       if (bads > 0 || shits > 0) ratingFC = 'FC';
@@ -883,6 +890,16 @@ class PlayState extends MusicBeatSubState
       else if (sicks > 0) ratingFC = 'SFC';
     }
     else if (songMisses < 10) ratingFC = 'SDCB';
+    updatePercentage();
+  }
+
+  function updatePercentage()
+  {
+    // this will be fixed to be accurate to how the results screen works
+    var totalNotesHit = Highscore.tallies.totalNotesHit;
+    totalNotesHit = totalNotesHit - songMisses;
+    // trace('Total Played: $totalPlayed | Total Notes Hit: $totalNotesHit');
+    ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
   }
 
   public override function update(elapsed:Float):Void
@@ -1626,6 +1643,9 @@ class PlayState extends MusicBeatSubState
 
   function initHealthBarColor(char, side:String = 'bf'):Void
   {
+    if (char == 'senpai-angry') char = 'senpai';
+    if (char == 'pico-playable') char = 'pico'; // haha funny edge cases that i wasn't expecting lmao.
+    trace('Current Char: $char');
     var color:FlxColor;
     switch (char.toLowerCase()) // hardcoded for now.
     {
@@ -1642,8 +1662,6 @@ class PlayState extends MusicBeatSubState
       case 'spooky':
         color = 0xFFd57e00;
       case 'parents':
-        color = 0xFFaf66ce;
-      case 'parents-christmas':
         color = 0xFFaf66ce;
       case 'senpai':
         color = 0xFFffaa6f;
@@ -1688,7 +1706,7 @@ class PlayState extends MusicBeatSubState
     add(healthBar);
 
     // The score text below the health bar.
-    scoreText = new FlxText(healthBarBG.x, healthBarBG.y + 30, 0, '', 20);
+    scoreText = new FlxText(healthBarBG.x + 10, healthBarBG.y + 20, 0, '', 20);
     scoreText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     scoreText.scrollFactor.set();
     scoreText.zIndex = 802;
@@ -2166,17 +2184,40 @@ class PlayState extends MusicBeatSubState
    */
   function updateScoreText():Void
   {
+    var combinedPercent:String = '';
+    if (totalPlayed != 0)
+    {
+      var percent:Float = floorDecimal(ratingPercent * 100, 2);
+      combinedPercent = percent + '%';
+    }
+    else
+    {
+      combinedPercent = 'N/A';
+    }
     // TODO: Add functionality for modules to update the score text. yeah thatd be cool, instead i gotta do it manually.
     if (!hasComboBreak)
     {
-      scoreText.text = 'Score:' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + Highscore.tallies.combo
-        + ' | Rating: $ratingFC (Percentage not coded yet!)'; // gonna figure out ratings next
+      scoreText.text = 'Score:' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + Highscore.tallies.combo +
+        ' | Rating: $ratingFC ($combinedPercent)'; // gonna figure out ratings next
     }
     else
     {
       scoreText.text = 'Score:' + songScore + ' | Misses: ' + songMisses + ' | Combo Broken!' +
-        ' | Rating: $ratingFC (Percentage not coded yet!)'; // no need to show combo if its broken
+        ' | Rating: $ratingFC ($combinedPercent)'; // no need to show combo if its broken
     }
+  }
+
+  // stolen from psych engine lmao i need this cause idk how to do this!!!!
+  public static function floorDecimal(value:Float, decimals:Int):Float
+  {
+    if (decimals < 1) return Math.floor(value);
+
+    var tempMult:Float = 1;
+    for (i in 0...decimals)
+      tempMult *= 10;
+
+    var newValue:Float = Math.floor(value * tempMult);
+    return newValue / tempMult;
   }
 
   /**
@@ -2735,7 +2776,7 @@ class PlayState extends MusicBeatSubState
     #if !debug
     perfectMode = false;
     #else
-    if (FlxG.keys.justPressed.H) camHUD.visible = !camHUD.visible;
+    if (FlxG.keys.justPressed.H) trace('this used to hide the hud but its annoying :3'); //  camHUD.visible = !camHUD.visible;
     #end
 
     #if CHART_EDITOR_SUPPORTED
@@ -2873,6 +2914,8 @@ class PlayState extends MusicBeatSubState
     }
     comboPopUps.displayRating(daRating);
     if (combo >= 10 || combo == 0) comboPopUps.displayCombo(combo);
+
+    totalPlayed++;
 
     vocals.playerVolume = 1;
   }
