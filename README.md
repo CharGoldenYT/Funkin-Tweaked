@@ -1,3 +1,5 @@
+# Char's Custom Funkin' 0.4.1 engine (though not really an engine but not sure what to call it lmao)
+
 # Friday Night Funkin' 
 
 Friday Night Funkin' is a rhythm game. Built using HaxeFlixel for Ludum Dare 47.

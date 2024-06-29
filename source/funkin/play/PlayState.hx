@@ -69,6 +69,8 @@ import openfl.Lib;
 import Discord.DiscordClient;
 #end
 
+using StringTools;
+
 /**
  * Parameters used to initialize the PlayState.
  */
@@ -150,6 +152,11 @@ class PlayState extends MusicBeatSubState
   public static var instance:PlayState = null;
 
   /**
+   * keeps track of if your combo is broken!
+   */
+  var hasComboBreak:Bool = false;
+
+  /**
    * This sucks. We need this because FlxG.resetState(); assumes the constructor has no arguments.
    * @see https://github.com/HaxeFlixel/flixel/issues/2541
    */
@@ -208,6 +215,31 @@ class PlayState extends MusicBeatSubState
    * TODO: Move this to its own class.
    */
   public var songScore:Int = 0;
+
+  /**
+   * The player's current misses. because I WANNA SEE MA MISSES BITCH.
+   */
+  public var songMisses:Int = 0;
+
+  /**
+    The Player's total amount of "Sick!" Ratings
+  **/
+  public var sicks:Int = 0;
+
+  /**
+    The Player's total amount of "Good" Ratings
+  **/
+  public var goods:Int = 0;
+
+  /**
+    The Player's total amount of "Bad" Ratings
+  **/
+  public var bads:Int = 0;
+
+  /**
+    The Player's total amount of "Shit" Ratings
+  **/
+  public var shits:Int = 0;
 
   /**
    * Start at this point in the song once the countdown is done.
@@ -681,7 +713,12 @@ class PlayState extends MusicBeatSubState
     Conductor.instance.update((Conductor.instance.beatLengthMs * -5) + startTimestamp);
 
     // The song is now loaded. We can continue to initialize the play state.
+    var currentCharacterDataa:SongCharacterData = currentChart.characters;
+    var bfName:String = trimCharName(currentCharacterDataa.player);
+    var dadName:String = trimCharName(currentCharacterDataa.opponent);
     initCameras();
+    initHealthBarColor(bfName.trim(), 'bf');
+    initHealthBarColor(dadName.trim(), 'dad');
     initHealthBar();
     if (!isMinimalMode)
     {
@@ -754,6 +791,23 @@ class PlayState extends MusicBeatSubState
     refresh();
   }
 
+  function trimCharName(name:String):String
+  {
+    if (StringTools.contains(name, '-car'))
+    {
+      name = StringTools.replace(name, '-car', '');
+    }
+    else if (StringTools.contains(name, '-christmas'))
+    {
+      name = StringTools.replace(name, '-christmas', '');
+    }
+    else if (StringTools.contains(name, '-pixel'))
+    {
+      name = StringTools.replace(name, '-pixel', '');
+    }
+    return name;
+  }
+
   public override function draw():Void
   {
     // if (FlxG.renderBlit)
@@ -817,6 +871,20 @@ class PlayState extends MusicBeatSubState
     return true;
   }
 
+  var ratingFC:String = '';
+
+  function updateCombo()
+  {
+    ratingFC = 'Clear';
+    if (songMisses < 1)
+    {
+      if (bads > 0 || shits > 0) ratingFC = 'FC';
+      else if (goods > 0) ratingFC = 'GFC';
+      else if (sicks > 0) ratingFC = 'SFC';
+    }
+    else if (songMisses < 10) ratingFC = 'SDCB';
+  }
+
   public override function update(elapsed:Float):Void
   {
     // TOTAL: 9.42% CPU Time when profiled in VS 2019.
@@ -828,6 +896,11 @@ class PlayState extends MusicBeatSubState
     var list = FlxG.sound.list;
     updateHealthBar();
     updateScoreText();
+    updateCombo();
+    if (songMisses > 0)
+    {
+      hasComboBreak = true;
+    }
 
     // Handle restarting the song when needed (player death or pressing Retry)
     if (needsReset)
@@ -898,6 +971,8 @@ class PlayState extends MusicBeatSubState
 
       health = Constants.HEALTH_STARTING;
       songScore = 0;
+      songMisses = 0;
+      hasComboBreak = false;
       Highscore.tallies.combo = 0;
       Countdown.performCountdown(currentStageId.startsWith('school'));
 
@@ -1546,6 +1621,53 @@ class PlayState extends MusicBeatSubState
     add(cameraFollowPoint);
   }
 
+  var boyfriendHealthBarColor:FlxColor = 0xFF31b0d1; // so the next part don't error out lmao
+  var dadHealthBarColor:FlxColor = 0xFFaf66ce; // so the next part don't error out lmao
+
+  function initHealthBarColor(char, side:String = 'bf'):Void
+  {
+    var color:FlxColor;
+    switch (char.toLowerCase()) // hardcoded for now.
+    {
+      default:
+        color = 0xFF31b0d1;
+      case 'gf':
+        color = 0xFFa5004d;
+      case 'dad':
+        color = 0xFFaf66ce;
+      case 'mom':
+        color = 0xFFd8558e;
+      case 'pico':
+        color = 0xFFb7d855;
+      case 'spooky':
+        color = 0xFFd57e00;
+      case 'parents':
+        color = 0xFFaf66ce;
+      case 'parents-christmas':
+        color = 0xFFaf66ce;
+      case 'senpai':
+        color = 0xFFffaa6f;
+      case 'spirit':
+        color = 0xFFff3c6e;
+      case 'tankman':
+        color = 0xFFFFFFFF;
+      case 'darnell':
+        color = 0xFF735eb0;
+      case 'monster':
+        color = 0xFFf3ff6e;
+      case 'char':
+        color = 0xFFFF9900; // HAHA LMAO ITS THE BIT-H
+    }
+
+    switch (side.toLowerCase())
+    {
+      case 'bf':
+        boyfriendHealthBarColor = color;
+      case 'dad':
+        dadHealthBarColor = color;
+    }
+  }
+
   /**
    * Initializes the health bar on the HUD.
    */
@@ -1561,13 +1683,13 @@ class PlayState extends MusicBeatSubState
     healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
       'healthLerp', 0, 2);
     healthBar.scrollFactor.set();
-    healthBar.createFilledBar(Constants.COLOR_HEALTH_BAR_RED, Constants.COLOR_HEALTH_BAR_GREEN);
+    healthBar.createFilledBar(dadHealthBarColor, boyfriendHealthBarColor);
     healthBar.zIndex = 801;
     add(healthBar);
 
     // The score text below the health bar.
-    scoreText = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, '', 20);
-    scoreText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    scoreText = new FlxText(healthBarBG.x, healthBarBG.y + 30, 0, '', 20);
+    scoreText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     scoreText.scrollFactor.set();
     scoreText.zIndex = 802;
     add(scoreText);
@@ -2044,14 +2166,16 @@ class PlayState extends MusicBeatSubState
    */
   function updateScoreText():Void
   {
-    // TODO: Add functionality for modules to update the score text.
-    if (isBotPlayMode)
+    // TODO: Add functionality for modules to update the score text. yeah thatd be cool, instead i gotta do it manually.
+    if (!hasComboBreak)
     {
-      scoreText.text = 'Bot Play Enabled';
+      scoreText.text = 'Score:' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + Highscore.tallies.combo +
+        ' | Rating: $ratingFC (?%)'; // gonna figure out ratings next
     }
     else
     {
-      scoreText.text = 'Score:' + songScore;
+      scoreText.text = 'Score:' + songScore + ' | Misses: ' + songMisses + ' | Combo: ' + Highscore.tallies.combo + ' | Rating: $ratingFC (?%)'
+        + ' | Combo Broken!';
     }
   }
 
@@ -2449,15 +2573,24 @@ class PlayState extends MusicBeatSubState
       case 'sick':
         healthChange = Constants.HEALTH_SICK_BONUS;
         isComboBreak = Constants.JUDGEMENT_SICK_COMBO_BREAK;
+        sicks++;
       case 'good':
         healthChange = Constants.HEALTH_GOOD_BONUS;
         isComboBreak = Constants.JUDGEMENT_GOOD_COMBO_BREAK;
+        goods++;
       case 'bad':
         healthChange = Constants.HEALTH_BAD_BONUS;
         isComboBreak = Constants.JUDGEMENT_BAD_COMBO_BREAK;
+        bads++;
       case 'shit':
         isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
         healthChange = Constants.HEALTH_SHIT_BONUS;
+        shits++;
+    }
+    if (isComboBreak)
+    {
+      songMisses++;
+      hasComboBreak = true;
     }
 
     // Send the note hit event.
@@ -2530,6 +2663,7 @@ class PlayState extends MusicBeatSubState
     if (Highscore.tallies.combo != 0) if (Highscore.tallies.combo >= 10) comboPopUps.displayCombo(0);
 
     applyScore(-10, 'miss', healthChange, true);
+    songMisses++;
 
     if (playSound)
     {
