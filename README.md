@@ -1,4 +1,4 @@
-# Char's Custom Funkin' 0.4.1 Build
+# Friday Night Funkin' Tweaked
 
 Added Features:
 
