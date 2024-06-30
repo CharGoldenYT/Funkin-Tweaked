@@ -2,7 +2,7 @@
 
 Added Features:
 
-Score text shows current rating (accurate to the results screen), current combo, and misses
+Score text shows current rating (accurate to the results screen), current combo, and combo breaks (more then just misses break your combo)
 
 Healthbar has (Hardcoded atm) colors because i like how other engines do that :3
 
