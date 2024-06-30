@@ -1643,18 +1643,27 @@ class PlayState extends MusicBeatSubState
     add(cameraFollowPoint);
   }
 
-  var boyfriendHealthBarColor:FlxColor = 0xFF31b0d1; // so the next part don't error out lmao
-  var dadHealthBarColor:FlxColor = 0xFFaf66ce; // so the next part don't error out lmao
+  var boyfriendHealthBarColor:FlxColor = Constants.COLOR_HEALTH_BAR_GREEN; // so the next part don't error out lmao
+  var dadHealthBarColor:FlxColor = Constants.COLOR_HEALTH_BAR_RED; // so the next part don't error out lmao
 
   function initHealthBarColor(char, side:String = 'bf'):Void
   {
     if (char == 'senpai-angry') char = 'senpai';
     if (char == 'pico-playable') char = 'pico'; // haha funny edge cases that i wasn't expecting lmao.
-    trace('Current Char: $char');
     var color:FlxColor;
     switch (char.toLowerCase()) // hardcoded for now.
     {
-      default:
+      default: // if it fits none of the other thingies, it'll revert to default colors.
+        switch (side.toLowerCase())
+        {
+          default:
+            color = 0xFFFFFFFF; // because it'll yell at me if i don't do this lmao
+          case 'bf':
+            color = Constants.COLOR_HEALTH_BAR_GREEN;
+          case 'dad':
+            color = Constants.COLOR_HEALTH_BAR_RED;
+        }
+      case 'bf':
         color = 0xFF31b0d1;
       case 'gf':
         color = 0xFFa5004d;
