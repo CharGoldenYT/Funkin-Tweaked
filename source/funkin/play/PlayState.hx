@@ -68,6 +68,7 @@ import openfl.Lib;
 #if discord_rpc
 import Discord.DiscordClient;
 #end
+import Type;
 
 using StringTools;
 
@@ -719,11 +720,13 @@ class PlayState extends MusicBeatSubState
 
     // The song is now loaded. We can continue to initialize the play state.
     var currentCharacterDataa:SongCharacterData = currentChart.characters;
-    var bfName:String = trimCharName(currentCharacterDataa.player);
-    var dadName:String = trimCharName(currentCharacterDataa.opponent);
+    var bf:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.player);
+    var dad:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.opponent);
+    var bfColor:Array<Int> = bf.getHealthBarColor();
+    var dadColor:Array<Int> = dad.getHealthBarColor(); // fuck it imma leave it like this
     initCameras();
-    initHealthBarColor(bfName.trim(), 'bf');
-    initHealthBarColor(dadName.trim(), 'dad');
+    initHealthBarColor(bfColor, 'bf');
+    initHealthBarColor(dadColor, 'dad');
     initHealthBar();
     if (!isMinimalMode)
     {
@@ -794,27 +797,6 @@ class PlayState extends MusicBeatSubState
     // This step ensures z-indexes are applied properly,
     // and it's important to call it last so all elements get affected.
     refresh();
-  }
-
-  function trimCharName(name:String):String
-  {
-    if (StringTools.contains(name, '-car'))
-    {
-      name = StringTools.replace(name, '-car', '');
-    }
-    else if (StringTools.contains(name, '-christmas'))
-    {
-      name = StringTools.replace(name, '-christmas', '');
-    }
-    else if (StringTools.contains(name, '-pixel'))
-    {
-      name = StringTools.replace(name, '-pixel', '');
-    }
-    else if (StringTools.contains(name, '-blazin'))
-    {
-      name = StringTools.replace(name, '-blazin', '');
-    }
-    return name;
   }
 
   public override function draw():Void
@@ -1650,49 +1632,23 @@ class PlayState extends MusicBeatSubState
   var boyfriendHealthBarColor:FlxColor = Constants.COLOR_HEALTH_BAR_GREEN; // so the next part don't error out lmao
   var dadHealthBarColor:FlxColor = Constants.COLOR_HEALTH_BAR_RED; // so the next part don't error out lmao
 
-  function initHealthBarColor(char, side:String = 'bf'):Void
+  function initHealthBarColor(char:Array<Int>, side:String = 'bf'):Void
   {
-    if (char == 'senpai-angry') char = 'senpai';
-    if (char == 'pico-playable') char = 'pico'; // haha funny edge cases that i wasn't expecting lmao.
     var color:FlxColor;
-    switch (char.toLowerCase()) // hardcoded for now.
+    color = 0xFFFFFFFF;
+    if (char.length == 4)
     {
-      default: // if it fits none of the other thingies, it'll revert to default colors.
-        switch (side.toLowerCase())
-        {
-          default:
-            color = 0xFFFFFFFF; // because it'll yell at me if i don't do this lmao
-          case 'bf':
-            color = Constants.COLOR_HEALTH_BAR_GREEN;
-          case 'dad':
-            color = Constants.COLOR_HEALTH_BAR_RED;
-        }
-      case 'bf':
-        color = 0xFF31b0d1;
-      case 'gf':
-        color = 0xFFa5004d;
-      case 'dad':
-        color = 0xFFaf66ce;
-      case 'mom':
-        color = 0xFFd8558e;
-      case 'pico':
-        color = 0xFFb7d855;
-      case 'spooky':
-        color = 0xFFd57e00;
-      case 'parents':
-        color = 0xFFaf66ce;
-      case 'senpai':
-        color = 0xFFffaa6f;
-      case 'spirit':
-        color = 0xFFff3c6e;
-      case 'tankman':
-        color = 0xFFFFFFFF;
-      case 'darnell':
-        color = 0xFF735eb0;
-      case 'monster':
-        color = 0xFFf3ff6e;
-      case 'char':
-        color = 0xFFFF9900; // HAHA LMAO ITS THE BIT-H
+      switch (side.toLowerCase())
+      {
+        case 'bf':
+          color = Constants.COLOR_HEALTH_BAR_GREEN;
+        case 'dad':
+          color = Constants.COLOR_HEALTH_BAR_RED;
+      }
+    }
+    else
+    {
+      color = FlxColor.fromRGB(char[0], char[1], char[2]);
     }
 
     switch (side.toLowerCase())
