@@ -6,9 +6,7 @@ Score text shows current rating (accurate to the results screen), current combo,
 
 Healthbar has colors because i like how other engines do that :3
 
-i'll figure out ghost tapping later lmao.
-
-# NOTE: IF YOU ARE BUILDIG FROM SOURCE, MAKE SURE TO USE THE CHARACTER FILES FOUND IN [HERE](https://github.com/gameygu-0213/Funkin/tree/main/charFiles/preload/data/characters/) AS OTHERWISE EVERYONE WILL HAVE DEFAULT HEALTH COLORS
+Proper Ghost Tapping!
 
 # Friday Night Funkin'
 
