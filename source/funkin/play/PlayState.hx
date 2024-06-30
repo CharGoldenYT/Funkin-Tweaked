@@ -1636,7 +1636,7 @@ class PlayState extends MusicBeatSubState
   {
     var color:FlxColor;
     color = 0xFFFFFFFF;
-    if (char.length == 4)
+    if (char.length == 4) // fun fact there should only be 3, HOWEVER THE DEFAULT ARRAY HAS 4 ALLOWING ME TO DO THIS AHAHAHHAHHAHA
     {
       switch (side.toLowerCase())
       {
