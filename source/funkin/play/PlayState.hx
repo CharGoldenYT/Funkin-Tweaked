@@ -810,6 +810,10 @@ class PlayState extends MusicBeatSubState
     {
       name = StringTools.replace(name, '-pixel', '');
     }
+    else if (StringTools.contains(name, '-blazin'))
+    {
+      name = StringTools.replace(name, '-blazin', '');
+    }
     return name;
   }
 
