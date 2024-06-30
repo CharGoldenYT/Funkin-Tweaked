@@ -95,6 +95,7 @@ class Save
           zoomCamera: true,
           debugDisplay: false,
           autoPause: true,
+          ghostTapping: true,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1090,6 +1091,11 @@ typedef SaveDataOptions =
    * @default `true`
    */
   var autoPause:Bool;
+
+  /**
+   * If enabled, removes score penalty for tapping with no notes
+   */
+  var ghostTapping:Bool;
 
   /**
    * Offset the users inputs by this many ms.
