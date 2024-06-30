@@ -2169,16 +2169,8 @@ class PlayState extends MusicBeatSubState
       combinedPercent = 'N/A';
     }
     // TODO: Add functionality for modules to update the score text. yeah thatd be cool, instead i gotta do it manually.
-    if (!hasComboBreak)
-    {
-      scoreText.text = 'Score:' + songScore + ' | Combo Breaks: ' + songMisses + ' | Combo: ' + Highscore.tallies.combo
-        + ' | Rating: $ratingFC ($combinedPercent)'; // gonna figure out ratings next
-    }
-    else
-    {
-      scoreText.text = 'Score:' + songScore + ' | Combo Breaks: ' + songMisses + ' | Combo Broken!' +
-        ' | Rating: $ratingFC ($combinedPercent)'; // no need to show combo if its broken
-    }
+    scoreText.text = 'Score:' + songScore + ' | Combo Breaks: ' + songMisses + ' | Combo: ' + Highscore.tallies.combo
+      + ' | Rating: $ratingFC ($combinedPercent)';
     scoreText.screenCenter(X);
   }
 
