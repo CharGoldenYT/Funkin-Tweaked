@@ -989,6 +989,7 @@ class PlayState extends MusicBeatSubState
       health = Constants.HEALTH_STARTING;
       songScore = 0;
       songMisses = 0;
+      totalPlayed = 0;
       hasComboBreak = false;
       Highscore.tallies.combo = 0;
       Countdown.performCountdown(currentStageId.startsWith('school'));
@@ -1691,7 +1692,7 @@ class PlayState extends MusicBeatSubState
    */
   function initHealthBar():Void
   {
-    var healthBarYPos:Float = Preferences.downscroll ? FlxG.height * 0.1 : FlxG.height * 0.9;
+    var healthBarYPos:Float = Preferences.downscroll ? FlxG.height * 0.1 : FlxG.height * 0.89;
     healthBarBG = FunkinSprite.create(0, healthBarYPos, 'healthBar');
     healthBarBG.screenCenter(X);
     healthBarBG.scrollFactor.set(0, 0);
@@ -1706,7 +1707,7 @@ class PlayState extends MusicBeatSubState
     add(healthBar);
 
     // The score text below the health bar.
-    scoreText = new FlxText(healthBarBG.x + 10, healthBarBG.y + 20, 0, '', 20);
+    scoreText = new FlxText(healthBarBG.x + 10, healthBarBG.y + 50, 0, '', 20);
     scoreText.setFormat(Paths.font('vcr.ttf'), 16, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     scoreText.scrollFactor.set();
     scoreText.zIndex = 802;
@@ -2205,6 +2206,7 @@ class PlayState extends MusicBeatSubState
       scoreText.text = 'Score:' + songScore + ' | Misses: ' + songMisses + ' | Combo Broken!' +
         ' | Rating: $ratingFC ($combinedPercent)'; // no need to show combo if its broken
     }
+    scoreText.screenCenter(X);
   }
 
   // stolen from psych engine lmao i need this cause idk how to do this!!!!
