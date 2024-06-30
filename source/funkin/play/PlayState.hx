@@ -991,6 +991,10 @@ class PlayState extends MusicBeatSubState
       songMisses = 0;
       totalPlayed = 0;
       hasComboBreak = false;
+      sicks = 0;
+      goods = 0;
+      bads = 0;
+      shits = 0;
       Highscore.tallies.combo = 0;
       Countdown.performCountdown(currentStageId.startsWith('school'));
 
