@@ -1,4 +1,4 @@
-# Char's Custom Funkin' 0.4.1 engine (though not really an engine but not sure what to call it lmao)
+# Char's Custom Funkin' 0.4.1 Build
 
 Added Features:
 
