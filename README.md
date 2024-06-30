@@ -3,7 +3,9 @@
 Added Features:
 
 Score text shows current rating (accurate to the results screen), current combo, and misses
+
 Healthbar has (Hardcoded atm) colors because i like how other engines do that :3
+
 i'll figure out ghost tapping later lmao.
 
 # Friday Night Funkin'
