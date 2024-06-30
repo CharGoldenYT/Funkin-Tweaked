@@ -1,6 +1,12 @@
 # Char's Custom Funkin' 0.4.1 engine (though not really an engine but not sure what to call it lmao)
 
-# Friday Night Funkin' 
+Added Features:
+
+Score text shows current rating (accurate to the results screen), current combo, and misses
+Healthbar has (Hardcoded atm) colors because i like how other engines do that :3
+i'll figure out ghost tapping later lmao.
+
+# Friday Night Funkin'
 
 Friday Night Funkin' is a rhythm game. Built using HaxeFlixel for Ludum Dare 47.
 
