@@ -96,6 +96,7 @@ class Save
           debugDisplay: false,
           autoPause: true,
           ghostTapping: true,
+          badsAndShitsCauseMiss: true, // because yes
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1096,6 +1097,11 @@ typedef SaveDataOptions =
    * If enabled, removes score penalty for tapping with no notes
    */
   var ghostTapping:Bool;
+
+  /**
+   * If enabled, removes score penalty for tapping with no notes
+   */
+  var badsAndShitsCauseMiss:Bool;
 
   /**
    * Offset the users inputs by this many ms.

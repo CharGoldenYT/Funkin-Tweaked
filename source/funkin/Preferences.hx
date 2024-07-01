@@ -148,6 +148,25 @@ class Preferences
   }
 
   /**
+   * If enabled, Makes Bads/Shits cause a miss
+   * @default `true`
+   */
+  public static var badsAndShitsCauseMiss(get, set):Bool;
+
+  static function get_badsAndShitsCauseMiss():Bool
+  {
+    return Save?.instance?.options?.badsAndShitsCauseMiss ?? true;
+  }
+
+  static function set_badsAndShitsCauseMiss(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.badsAndShitsCauseMiss = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * Loads the user's preferences from the save data and apply them.
    */
   public static function init():Void

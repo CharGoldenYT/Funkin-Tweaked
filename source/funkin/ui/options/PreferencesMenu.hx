@@ -70,6 +70,9 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Ghost Tapping', 'No penalty for pressing notes that arent there', function(value:Bool):Void {
       Preferences.ghostTapping = value;
     }, Preferences.ghostTapping);
+    createPrefItemCheckbox('Bads/Shits Break Combo', 'Hitting a note with a Bad or Shit rating breaks combo', function(value:Bool):Void {
+      Preferences.badsAndShitsCauseMiss = value;
+    }, Preferences.badsAndShitsCauseMiss);
   }
 
   function createPrefItemCheckbox(prefName:String, prefDesc:String, onChange:Bool->Void, defaultValue:Bool):Void

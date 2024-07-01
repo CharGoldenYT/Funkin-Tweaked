@@ -865,7 +865,7 @@ class PlayState extends MusicBeatSubState
   var ratingFC:String = '';
   var ratingPercent:Float;
 
-  function updateCombo()
+  function updateCombo():Void
   {
     ratingFC = 'Clear';
     if (shits == 0 && bads == 0 && goods == 0 && sicks == 0 && songMisses == 0) ratingFC = '?';
@@ -879,12 +879,19 @@ class PlayState extends MusicBeatSubState
     updatePercentage();
   }
 
-  function updatePercentage()
+  function updatePercentage():Void
   {
-    // this will be fixed to be accurate to how the results screen works
-    var totalNotesHit = Highscore.tallies.totalNotesHit;
-    totalNotesHit = totalNotesHit - songMisses;
-    // trace('Total Played: $totalPlayed | Total Notes Hit: $totalNotesHit');
+    var totalNotesHit:Int = Highscore.tallies.totalNotesHit;
+    var badsAndShitsCauseMiss:Bool = Preferences.badsAndShitsCauseMiss; // for debugging purposes
+    if (badsAndShitsCauseMiss) // to keep it accurate to the results screen.
+    {
+      totalNotesHit = totalNotesHit - songMisses;
+    }
+    else
+    {
+      totalNotesHit = totalNotesHit - (songMisses + (bads + shits));
+    }
+    // trace('Total Played: $totalPlayed | Total Notes Hit: $totalNotesHit | badsAndShitsCauseMiss: $badsAndShitsCauseMiss | totalMisses: $totalMisses');
     ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
   }
 
@@ -2587,13 +2594,27 @@ class PlayState extends MusicBeatSubState
         isComboBreak = Constants.JUDGEMENT_GOOD_COMBO_BREAK;
         goods++;
       case 'bad':
-        healthChange = Constants.HEALTH_BAD_BONUS;
-        isComboBreak = Constants.JUDGEMENT_BAD_COMBO_BREAK;
         bads++;
+        healthChange = Constants.HEALTH_BAD_BONUS;
+        if (Preferences.badsAndShitsCauseMiss)
+        {
+          isComboBreak = Constants.JUDGEMENT_BAD_COMBO_BREAK;
+        }
+        else
+        {
+          isComboBreak = false;
+        }
       case 'shit':
-        isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
-        healthChange = Constants.HEALTH_SHIT_BONUS;
         shits++;
+        if (Preferences.badsAndShitsCauseMiss)
+        {
+          isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
+        }
+        else
+        {
+          isComboBreak = false;
+        }
+        healthChange = Constants.HEALTH_SHIT_BONUS;
     }
     if (isComboBreak)
     {
