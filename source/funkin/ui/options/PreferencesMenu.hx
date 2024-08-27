@@ -67,6 +67,15 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Auto Pause', 'Automatically pause the game when it loses focus', function(value:Bool):Void {
       Preferences.autoPause = value;
     }, Preferences.autoPause);
+    createPrefItemCheckbox('Bads/Shits Break Combo', 'Getting a Bad or Shit rating breaks combo', function(value:Bool):Void {
+      Preferences.badsShitsCauseMiss = value;
+    }, Preferences.badsShitsCauseMiss);
+    createPrefItemCheckbox('Extra Score Info', 'Makes the score show extra details like combo and misses/combo breaks', function(value:Bool):Void {
+      Preferences.extraScoreInfo = value;
+    }, Preferences.extraScoreInfo);
+    createPrefItemCheckbox('Ghost Tapping', 'THE FEATURE EVERYONE WANTED IN BASE GAME. Now made easily toggleable!', function(value:Bool):Void {
+      Preferences.ghostTapping = value;
+    }, Preferences.ghostTapping);
   }
 
   function createPrefItemCheckbox(prefName:String, prefDesc:String, onChange:Bool->Void, defaultValue:Bool):Void

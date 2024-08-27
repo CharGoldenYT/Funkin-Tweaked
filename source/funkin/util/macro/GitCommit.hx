@@ -98,7 +98,7 @@ class GitCommit
         throw e;
       }
     }
-    trace('Git Status Output: ${output}');
+    trace('Git Status Output: ${output.length > 0}');
 
     // Generates a string expression
     return macro $v{output.length > 0};

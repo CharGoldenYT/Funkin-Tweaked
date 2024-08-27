@@ -64,7 +64,7 @@ class PopUpStuff extends FlxTypedGroup<FlxSprite>
         startDelay: Conductor.instance.beatLengthMs * 0.001
       });
 
-    trace('displayRating took: ${TimerUtil.seconds(perfStart)}');
+    // trace('displayRating took: ${TimerUtil.seconds(perfStart)}');
   }
 
   public function displayCombo(?combo:Int = 0):Int
@@ -162,7 +162,7 @@ class PopUpStuff extends FlxTypedGroup<FlxSprite>
       daLoop++;
     }
 
-    trace('displayCombo took: ${TimerUtil.seconds(perfStart)}');
+    // trace('displayCombo took: ${TimerUtil.seconds(perfStart)}');
 
     return combo;
   }

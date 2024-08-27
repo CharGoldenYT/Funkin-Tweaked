@@ -56,6 +56,11 @@ class Constants
   #end
 
   /**
+   * The Version of Funkin' Tweaked
+   */
+  public static final TWEAKED_VERSION:String = 'Funkin\' Tweaked v0.5 | Code Optimizing Update!';
+
+  /**
    * URL DATA
    */
   // ==============================
@@ -457,8 +462,8 @@ class Constants
   public static final JUDGEMENT_KILLER_COMBO_BREAK:Bool = false;
   public static final JUDGEMENT_SICK_COMBO_BREAK:Bool = false;
   public static final JUDGEMENT_GOOD_COMBO_BREAK:Bool = false;
-  public static final JUDGEMENT_BAD_COMBO_BREAK:Bool = true;
-  public static final JUDGEMENT_SHIT_COMBO_BREAK:Bool = true;
+  public static var JUDGEMENT_BAD_COMBO_BREAK:Bool = true;
+  public static var JUDGEMENT_SHIT_COMBO_BREAK:Bool = true;
 
   // % Sick
   public static final RANK_PERFECT_PLAT_THRESHOLD:Float = 1.0; // % Sick
@@ -513,7 +518,7 @@ class Constants
    * If true, the player will not receive the ghost miss penalty if there are no notes within the hit window.
    * This is the thing people have been begging for forever lolol.
    */
-  public static final GHOST_TAPPING:Bool = false;
+  public static var GHOST_TAPPING:Bool = true;
 
   /**
    * The maximum number of previous file paths for the Chart Editor to remember.

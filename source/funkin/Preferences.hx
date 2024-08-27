@@ -129,6 +129,63 @@ class Preferences
   }
 
   /**
+   * If enabled, Bads and Shits cause a miss.
+   * @default `true`
+   */
+  public static var badsShitsCauseMiss(get, set):Bool;
+
+  static function get_badsShitsCauseMiss():Bool
+  {
+    return Save?.instance?.options?.badsShitsCauseMiss ?? true;
+  }
+
+  static function set_badsShitsCauseMiss(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.badsShitsCauseMiss = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, Shows extra info on the score line, like combo and combo breaks/misses
+   * @default `true`
+   */
+  public static var extraScoreInfo(get, set):Bool;
+
+  static function get_extraScoreInfo():Bool
+  {
+    return Save?.instance?.options?.extraScoreInfo ?? true;
+  }
+
+  static function set_extraScoreInfo(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.extraScoreInfo = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, lets you press when there are no arrows without causing a miss.
+   * @default `true`
+   */
+  public static var ghostTapping(get, set):Bool;
+
+  static function get_ghostTapping():Bool
+  {
+    return Save?.instance?.options?.ghostTapping ?? true;
+  }
+
+  static function set_ghostTapping(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.ghostTapping = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * Loads the user's preferences from the save data and apply them.
    */
   public static function init():Void

@@ -17,6 +17,7 @@ class BaseCharacter extends Bopper
   // Metadata about a character.
   public var characterId(default, null):String;
   public var characterName(default, null):String;
+  public var healthBarColor(default, null):Array<Int>;
 
   /**
    * Whether the player is an active character (Boyfriend) or not.
@@ -183,6 +184,7 @@ class BaseCharacter extends Bopper
       this.singTimeSteps = _data.singTime;
       this.globalOffsets = _data.offsets;
       this.flipX = _data.flipX;
+      this.healthBarColor = _data.healthBarColor;
     }
 
     shouldBop = false;
@@ -215,6 +217,11 @@ class BaseCharacter extends Bopper
   public function getDataFlipX():Bool
   {
     return _data.flipX;
+  }
+
+  public function getHealthBarColor():Array<Int>
+  {
+    return _data.healthBarColor;
   }
 
   function findCountAnimations(prefix:String):Array<Int>
@@ -393,7 +400,7 @@ class BaseCharacter extends Bopper
       FlxG.watch.addQuick('singTimeSec-${characterId}', singTimeSec);
       if (holdTimer > singTimeSec && shouldStopSinging)
       {
-        trace('holdTimer reached ${holdTimer}sec (> ${singTimeSec}), stopping sing animation');
+        // trace('holdTimer reached ${holdTimer}sec (> ${singTimeSec}), stopping sing animation');
         holdTimer = 0;
         dance(true);
       }

@@ -95,6 +95,9 @@ class Save
           zoomCamera: true,
           debugDisplay: false,
           autoPause: true,
+          badsShitsCauseMiss: true,
+          extraScoreInfo: true,
+          ghostTapping: true,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1102,6 +1105,24 @@ typedef SaveDataOptions =
    * @default `0`
    */
   var audioVisualOffset:Int;
+
+  /**
+   * Toggles Whether Bads/Shits Cause missing.
+   * @default `true`
+   */
+  var badsShitsCauseMiss:Bool;
+
+  /**
+   * Shows Info like current combo current Combo Breaks/Misses
+   * @default `true`
+   */
+  var extraScoreInfo:Bool;
+
+  /**
+   * Enables the ability to press where arrows arent, and not cause misses
+   * @default `true`
+   */
+  var ghostTapping:Bool;
 
   var controls:
     {
