@@ -100,6 +100,9 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Ghost Tapping', 'THE FEATURE EVERYONE WANTED IN BASE GAME. Now made easily toggleable!', function(value:Bool):Void {
       Preferences.ghostTapping = value;
     }, Preferences.ghostTapping);
+    createPrefItemCheckbox('Show Timings', 'Shows when you hit a note below the rating', function(value:Bool):Void {
+      Preferences.showTimings = value;
+    }, Preferences.showTimings);
   }
 
   function createPrefItemCheckbox(prefName:String, prefDesc:String, onChange:Bool->Void, defaultValue:Bool):Void

@@ -186,6 +186,25 @@ class Preferences
   }
 
   /**
+   * If enabled, shows when you hit a note
+   * @default `true`
+   */
+  public static var showTimings(get, set):Bool;
+
+  static function get_showTimings():Bool
+  {
+    return Save?.instance?.options?.showTimings ?? true;
+  }
+
+  static function set_showTimings(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.showTimings = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * Loads the user's preferences from the save data and apply them.
    */
   public static function init():Void

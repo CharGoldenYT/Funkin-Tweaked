@@ -455,6 +455,11 @@ class PlayState extends MusicBeatSubState
    * RENDER OBJECTS
    */
   /**
+   * The FlxText that shows last note's hit time
+   */
+  var hitTime:FlxText;
+
+  /**
    * The FlxText which displays the current score.
    */
   var scoreText:FlxText;
@@ -748,6 +753,13 @@ class PlayState extends MusicBeatSubState
       // As long as they call `PlayState.instance.startCountdown()` later, the countdown will start.
       startCountdown();
     }
+
+    hitTime = new FlxText(0, 0, 0, "Last Input Time: ", 24);
+    hitTime.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+    hitTime.cameras = [camHUD];
+    hitTime.screenCenter();
+    hitTime.alpha = 0;
+    add(hitTime);
 
     // Do this last to prevent beatHit from being called before create() is done.
     super.create();
@@ -2335,7 +2347,7 @@ class PlayState extends MusicBeatSubState
 
         // Judge the miss.
         // NOTE: This is what handles the scoring.
-        trace('Missed note! ${note.noteData}');
+        // trace('Missed note! ${note.noteData}');
         onNoteMiss(note, event.playSound, event.healthChange);
 
         note.handledMiss = true;
@@ -2493,6 +2505,8 @@ class PlayState extends MusicBeatSubState
     }
   }
 
+  var latencyTween:FlxTween;
+
   function goodNoteHit(note:NoteSprite, input:PreciseInputEvent):Void
   {
     // Calculate the input latency (do this as late as possible).
@@ -2507,6 +2521,14 @@ class PlayState extends MusicBeatSubState
 
     var score = Scoring.scoreNote(noteDiff, PBOT1);
     var daRating = Scoring.judgeNote(noteDiff, PBOT1);
+    if (Preferences.showTimings)
+    {
+      hitTime.text = '$noteDiff(Ms)';
+      hitTime.alpha = 1;
+      hitTime.screenCenter(X);
+      if (latencyTween != null) latencyTween.cancel();
+      latencyTween = FlxTween.tween(hitTime, {alpha: 0}, 1);
+    }
 
     var healthChange = 0.0;
     var isComboBreak = false;
@@ -2515,15 +2537,19 @@ class PlayState extends MusicBeatSubState
       case 'sick':
         healthChange = Constants.HEALTH_SICK_BONUS;
         isComboBreak = Constants.JUDGEMENT_SICK_COMBO_BREAK;
+        if (Preferences.showTimings) hitTime.color = 0x00FF00;
       case 'good':
         healthChange = Constants.HEALTH_GOOD_BONUS;
         isComboBreak = Constants.JUDGEMENT_GOOD_COMBO_BREAK;
+        if (Preferences.showTimings) hitTime.color = 0x198865;
       case 'bad':
         healthChange = Constants.HEALTH_BAD_BONUS;
         isComboBreak = Constants.JUDGEMENT_BAD_COMBO_BREAK;
+        if (Preferences.showTimings) hitTime.color = 0xFF8B17;
       case 'shit':
         isComboBreak = Constants.JUDGEMENT_SHIT_COMBO_BREAK;
         healthChange = Constants.HEALTH_SHIT_BONUS;
+        if (Preferences.showTimings) hitTime.color = 0xFF0000;
     }
     if (isComboBreak) songMisses++;
 

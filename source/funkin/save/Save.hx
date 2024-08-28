@@ -98,6 +98,7 @@ class Save
           badsShitsCauseMiss: true,
           extraScoreInfo: true,
           ghostTapping: true,
+          showTimings: true,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1123,6 +1124,12 @@ typedef SaveDataOptions =
    * @default `true`
    */
   var ghostTapping:Bool;
+
+  /**
+   * If enabled, shows when you hit a note
+   * @default `true`
+   */
+  var showTimings:Bool;
 
   var controls:
     {
