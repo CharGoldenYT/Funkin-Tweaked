@@ -3,6 +3,8 @@ package funkin.ui.options;
 import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.text.FlxText;
+import flixel.util.FlxColor;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import funkin.ui.AtlasText.AtlasFont;
 import funkin.ui.options.OptionsState.Page;
@@ -15,7 +17,12 @@ class PreferencesMenu extends Page
   var preferenceItems:FlxTypedSpriteGroup<FlxSprite>;
 
   var menuCamera:FlxCamera;
+  var camDesc:FlxCamera;
   var camFollow:FlxObject;
+  var descBox:FlxSprite;
+  var descText:FlxText;
+  var funnyToggle:Bool = false;
+  var defaultZoom:Float = 0;
 
   public function new()
   {
@@ -25,6 +32,10 @@ class PreferencesMenu extends Page
     FlxG.cameras.add(menuCamera, false);
     menuCamera.bgColor = 0x0;
     camera = menuCamera;
+
+    camDesc = new FlxCamera();
+    FlxG.cameras.add(camDesc, false);
+    camDesc.bgColor = 0x0;
 
     add(items = new TextMenuList());
     add(preferenceItems = new FlxTypedSpriteGroup<FlxSprite>());
@@ -42,6 +53,19 @@ class PreferencesMenu extends Page
     items.onChange.add(function(selected) {
       camFollow.y = selected.y;
     });
+    defaultZoom = menuCamera.zoom;
+
+    descBox = new FlxSprite().makeGraphic(FlxG.width - 24, 200, 0x99000000);
+    descBox.y = FlxG.height - (descBox.height + 5);
+    descBox.x = 12;
+    descBox.cameras = [camDesc];
+    add(descBox);
+
+    descText = new FlxText(0, descBox.getGraphicMidpoint().y, descBox.width, "This is default text", 60);
+    descText.setFormat("VCR OSD Mono", 60, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    descText.cameras = [camDesc];
+    descText.screenCenter(X);
+    add(descText);
   }
 
   /**
@@ -86,22 +110,35 @@ class PreferencesMenu extends Page
       var value = !checkbox.currentValue;
       onChange(value);
       checkbox.currentValue = value;
-    });
+    }, false, prefDesc);
 
     preferenceItems.add(checkbox);
   }
 
-  override function update(elapsed:Float)
+  override function update(elapsed:Float):Void
   {
     super.update(elapsed);
 
     // Indent the selected item.
     // TODO: Only do this on menu change?
     items.forEach(function(daItem:TextMenuItem) {
-      if (items.selectedItem == daItem) daItem.x = 150;
+      if (items.selectedItem == daItem)
+      {
+        daItem.x = 150;
+        descText.text = daItem.textDesc;
+        descText.screenCenter(X);
+        descText.y = descBox.getGraphicMidpoint().y - 25;
+      }
       else
+      {
         daItem.x = 120;
+      }
     });
+    if (FlxG.keys.justPressed.RBRACKET)
+    {
+      funnyToggle = !funnyToggle;
+      menuCamera.zoom = funnyToggle ? 0.01 : defaultZoom;
+    }
   }
 }
 

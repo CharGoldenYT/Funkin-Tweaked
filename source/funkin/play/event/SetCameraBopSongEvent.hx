@@ -53,7 +53,7 @@ class SetCameraBopSongEvent extends SongEvent
     PlayState.instance.cameraBopIntensity = (Constants.DEFAULT_BOP_INTENSITY - 1.0) * intensity + 1.0;
     PlayState.instance.hudCameraZoomIntensity = (Constants.DEFAULT_BOP_INTENSITY - 1.0) * intensity * 2.0;
     PlayState.instance.cameraZoomRate = rate;
-    trace('Set camera zoom rate to ${PlayState.instance.cameraZoomRate}');
+    // trace('Set camera zoom rate to ${PlayState.instance.cameraZoomRate}');
   }
 
   public override function getTitle():String

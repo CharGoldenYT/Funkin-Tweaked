@@ -58,7 +58,7 @@ class Constants
   /**
    * The Version of Funkin' Tweaked
    */
-  public static final TWEAKED_VERSION:String = 'Funkin\' Tweaked v0.5 | Code Optimizing Update!';
+  public static final TWEAKED_VERSION:String = '0.6';
 
   /**
    * URL DATA

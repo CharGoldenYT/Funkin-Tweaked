@@ -1597,7 +1597,7 @@ class PlayState extends MusicBeatSubState
     healthBarBG.screenCenter(X);
     healthBarBG.scrollFactor.set(0, 0);
     healthBarBG.zIndex = 800;
-    if (Preferences.extraScoreInfo) healthBarBG.y = Preferences.downscroll ? healthBarBG.y + 15 : healthBarBG.y - 15;
+    if (Preferences.extraScoreInfo) healthBarBG.y = Preferences.downscroll ? healthBarBG.y + 5 : healthBarBG.y - 5;
     add(healthBarBG);
 
     healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
@@ -2117,7 +2117,7 @@ class PlayState extends MusicBeatSubState
         scoreText.text = 'Score: $songScore | $missString $songMisses | Combo: $combo | Rating: $ratingFC$percent)';
       }
       scoreText.screenCenter(X);
-      scoreText.y = Preferences.downscroll ? healthBarBG.y - 65 : healthBarBG.y + 65;
+      scoreText.y = Preferences.downscroll ? healthBarBG.y - 50 : healthBarBG.y + 50;
     }
   }
 

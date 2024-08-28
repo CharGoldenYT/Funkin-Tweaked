@@ -291,10 +291,10 @@ class FreeplayState extends MusicBeatSubState
 
         // Only display songs which actually have available difficulties for the current character.
         var displayedVariations = song.getVariationsByCharId(currentCharacter);
-        trace(songId);
-        trace(displayedVariations);
+        // trace(songId);
+        // trace(displayedVariations);
         var availableDifficultiesForSong:Array<String> = song.listDifficulties(displayedVariations, false);
-        trace(availableDifficultiesForSong);
+        // trace(availableDifficultiesForSong);
         if (availableDifficultiesForSong.length == 0) continue;
 
         songs.push(new FreeplaySongData(levelId, songId, song, displayedVariations));
@@ -309,10 +309,10 @@ class FreeplayState extends MusicBeatSubState
 
     // LOAD CHARACTERS
 
-    trace(FlxG.width);
-    trace(FlxG.camera.zoom);
-    trace(FlxG.camera.initialZoom);
-    trace(FlxCamera.defaultZoom);
+    // trace(FlxG.width);
+    // trace(FlxG.camera.zoom);
+    // trace(FlxG.camera.initialZoom);
+    // trace(FlxCamera.defaultZoom);
 
     pinkBack = FunkinSprite.create('freeplay/pinkBack');
     pinkBack.color = 0xFFFFD4E9; // sets it to pink!
@@ -857,7 +857,7 @@ class FreeplayState extends MusicBeatSubState
           return str.songName.toLowerCase().startsWith(songFilter.filterData);
         });
       case ALL:
-      // no filter!
+        // no filter!
       case FAVORITE:
         songsToFilter = songsToFilter.filter(str -> {
           if (str == null) return true; // Random

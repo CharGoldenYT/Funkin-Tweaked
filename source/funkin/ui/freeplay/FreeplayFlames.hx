@@ -76,7 +76,7 @@ class FreeplayFlames extends FlxSpriteGroup
           var nextTimer:FlxTimer = new FlxTimer().start(flameTimer * visibleCount, function(currentTimer:FlxTimer) {
             if (i >= this.flameCount)
             {
-              trace('EARLY EXIT');
+              // trace('EARLY EXIT');
               return;
             }
             timers.remove(currentTimer);

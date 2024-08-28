@@ -1,6 +1,7 @@
 package funkin.util.macro;
 
 #if !display
+#if debug
 class GitCommit
 {
   /**
@@ -108,4 +109,40 @@ class GitCommit
     #end
   }
 }
+#else
+
+/**
+ * GitCommit is only actually used when building a debug build so LETS SAVE BUILD TIME!
+ */
+class GitCommit
+{
+  /**
+   * Get the SHA1 hash of the current Git commit.
+   * @return string
+   */
+  public static macro function getGitCommitHash():haxe.macro.Expr.ExprOf<String>
+  {
+    return macro $v{'N/A'};
+  }
+
+  /**
+   * Get the branch name of the current Git commit.
+   * @return string
+   */
+  public static macro function getGitBranch():haxe.macro.Expr.ExprOf<String>
+  {
+    return macro $v{'N/A'};
+  }
+
+  /**
+   * Get whether the local Git repository is dirty or not.
+   * @return string
+   */
+  public static macro function getGitHasLocalChanges():haxe.macro.Expr.ExprOf<Bool>
+  {
+    return macro $v{false};
+  }
+}
+#end
+
 #end
