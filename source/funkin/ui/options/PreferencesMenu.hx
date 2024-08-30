@@ -112,6 +112,9 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Timer Bar', 'Show how far you are in a song.', function(value:Bool):Void {
       Preferences.timer = value;
     }, Preferences.timer);
+    createPrefItemCheckbox('Note Lanes', 'adds a slightly transparent lane under the Strumline', function(value:Bool):Void {
+      Preferences.lanes = value;
+    }, Preferences.lanes);
   }
 
   function createPrefItemCheckbox(prefName:String, prefDesc:String, onChange:Bool->Void, defaultValue:Bool):Void

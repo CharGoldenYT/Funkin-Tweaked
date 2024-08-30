@@ -102,6 +102,7 @@ class Save
           transparentStrumline: false,
           complexAccuracy: false,
           timer: true,
+          lanes: false,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1149,6 +1150,8 @@ typedef SaveDataOptions =
    * Whether to show the time remaining in a song.
    */
   var timer:Bool;
+
+  var lanes:Bool;
 
   var controls:
     {

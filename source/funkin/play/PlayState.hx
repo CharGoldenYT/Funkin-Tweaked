@@ -763,13 +763,6 @@ class PlayState extends MusicBeatSubState
       startCountdown();
     }
 
-    hitTime = new FlxText(0, 0, 0, "Last Input Time: ", 24);
-    hitTime.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-    hitTime.cameras = [camHUD];
-    hitTime.screenCenter();
-    hitTime.alpha = 0;
-    add(hitTime);
-
     // Do this last to prevent beatHit from being called before create() is done.
     super.create();
 
@@ -1612,29 +1605,41 @@ class PlayState extends MusicBeatSubState
      */
   function initHealthBar():Void
   {
+    // Player Note Lane
     notLane = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
     notLane.alpha = 0.6;
     notLane.zIndex = 798;
     notLane.cameras = [camHUD];
     add(notLane);
 
+    // Opponent Note Lane
     notLane2 = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
     notLane2.alpha = 0.6;
     notLane2.zIndex = 799;
     notLane2.cameras = [camHUD];
     add(notLane2);
+
+    // Text that shows last hit time
+    hitTime = new FlxText(0, 0, 0, "", 24);
+    hitTime.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+    hitTime.cameras = [camHUD];
+    hitTime.screenCenter();
+    hitTime.alpha = 0;
+    hitTime.zIndex = 805;
+    add(hitTime);
+    // Load the character data to get health bar color!
     var currentCharacterDataa:SongCharacterData = currentChart.characters;
     var bf:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.player);
     var dad:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.opponent);
     if (bf.healthBarColor.length == 3)
     {
-      var array:Array<Int> = bf.getHealthBarColor();
-      green = FlxColor.fromRGB(array[0], array[1], array[2]);
+      // var array:Array<Int> = bf.getHealthBarColor();
+      green = FlxColor.fromRGB(bf.getHealthBarColor()[0], bf.getHealthBarColor()[1], bf.getHealthBarColor()[2]);
     }
     if (dad.healthBarColor.length == 3)
     {
-      var array:Array<Int> = dad.getHealthBarColor();
-      red = FlxColor.fromRGB(array[0], array[1], array[2]);
+      // var array:Array<Int> = dad.getHealthBarColor();
+      red = FlxColor.fromRGB(dad.getHealthBarColor()[0], dad.getHealthBarColor()[1], dad.getHealthBarColor()[2]);
     }
 
     var healthBarYPos:Float = Preferences.downscroll ? FlxG.height * 0.1 : FlxG.height * 0.9;
@@ -1889,6 +1894,7 @@ class PlayState extends MusicBeatSubState
     // notLane.height = FlxG.height;
     // notLane.updateHitbox();
     notLane.x = playerStrumline.x;
+    notLane.visible = Preferences.lanes;
 
     // Position the opponent strumline on the left half of the screen
     opponentStrumline.x = Constants.STRUMLINE_X_OFFSET;
@@ -1900,6 +1906,22 @@ class PlayState extends MusicBeatSubState
     // notLane2.height = FlxG.height;
     // notLane2.updateHitbox();
     notLane2.x = opponentStrumline.x;
+    if (Preferences.lanes)
+    {
+      if (!opponentStrumline.visible || currentSong.id == 'blazin')
+      {
+        notLane2.visible = false;
+        if (currentSong.id == 'blazin') notLane.screenCenter(X);
+      }
+      else
+      {
+        notLane2.visible = true;
+      }
+    }
+    else
+    {
+      notLane2.visible = false;
+    }
 
     if (!PlayStatePlaylist.isStoryMode)
     {
@@ -2838,10 +2860,12 @@ class PlayState extends MusicBeatSubState
         bads++;
         Highscore.tallies.bad += 1;
         if (latency > 0) latency = latency * -1; // should just kill you for this but i guess it'll just be a penalty.
+        if (Preferences.badsShitsCauseMiss) latency = 0; // You already get a penalty for hitting badly, no need to double it!
       case 'shit':
         shits++;
         Highscore.tallies.shit += 1;
         if (latency > 0) latency = latency * -1; // should just kill you for this but i guess it'll just be a penalty.
+        if (Preferences.badsShitsCauseMiss) latency = 0; // You already get a penalty for hitting badly, no need to double it!
       case 'miss':
         songMisses++;
         Highscore.tallies.missed += 1;
@@ -2863,8 +2887,7 @@ class PlayState extends MusicBeatSubState
     totalPlayed++;
     var totalNotesHit:Int = Preferences.badsShitsCauseMiss ? Highscore.tallies.totalNotesHit - songMisses : Highscore.tallies.totalNotesHit
       - (songMisses + (shits + bads));
-    if (totalNotesHit < 10) latency = latency * 0.5; // because if you hit it really badly it can cause it to stay at "N/A"
-    if (Preferences.complexAccuracy) totalLatency += latency * 0.01;
+    if (Preferences.complexAccuracy) totalLatency += latency * 0.001;
     if (totalLatency < 0) totalLatency = 0;
     if (totalLatency > totalNotesHit) totalLatency = totalNotesHit - 0.1;
     var funnyCalc:Float = (totalNotesHit - totalLatency) / totalPlayed;

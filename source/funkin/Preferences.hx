@@ -262,6 +262,25 @@ class Preferences
   }
 
   /**
+   * Whether to show not lanes
+   * @default `true`
+   */
+  public static var lanes(get, set):Bool;
+
+  static function get_lanes():Bool
+  {
+    return Save?.instance?.options?.lanes ?? true;
+  }
+
+  static function set_lanes(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.lanes = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * Loads the user's preferences from the save data and apply them.
    */
   public static function init():Void
