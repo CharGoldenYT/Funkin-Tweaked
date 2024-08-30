@@ -47,6 +47,7 @@ import funkin.play.notes.NoteSplash;
 import funkin.play.notes.NoteSprite;
 import funkin.play.notes.notestyle.NoteStyle;
 import funkin.play.notes.Strumline;
+import funkin.play.notes.StrumlineNote;
 import funkin.play.notes.SustainTrail;
 import funkin.play.scoring.Scoring;
 import funkin.play.song.Song;
@@ -2518,7 +2519,7 @@ class PlayState extends MusicBeatSubState
     // Get the offset and compensate for input latency.
     // Round inward (trim remainder) for consistency.
     var noteDiff:Int = Std.int(Conductor.instance.songPosition - note.noteData.time - inputLatencyMs);
-
+    var latency:Float = (Conductor.instance.songPosition - note.noteData.time - inputLatencyMs);
     var score = Scoring.scoreNote(noteDiff, PBOT1);
     var daRating = Scoring.judgeNote(noteDiff, PBOT1);
     if (Preferences.showTimings)
@@ -2569,7 +2570,7 @@ class PlayState extends MusicBeatSubState
     vocals.playerVolume = 1;
 
     // Display the combo meter and add the calculation to the score.
-    applyScore(event.score, event.judgement, event.healthChange, event.isComboBreak);
+    applyScore(event.score, event.judgement, event.healthChange, event.isComboBreak, latency);
     popUpScore(event.judgement);
   }
 
@@ -2748,22 +2749,36 @@ class PlayState extends MusicBeatSubState
   /**
      * Handles applying health, score, and ratings.
      */
-  function applyScore(score:Int, daRating:String, healthChange:Float, isComboBreak:Bool)
+  var totalLatency:Float;
+
+  function applyScore(score:Int, daRating:String, healthChange:Float, isComboBreak:Bool, ?latency:Float = 0):Void
   {
     switch (daRating)
     {
       case 'sick':
         Highscore.tallies.sick += 1;
+        if (totalLatency >= 5 && latency < 0) latency = latency * 0.8;
+        if (totalLatency <= 5 && totalLatency < 2 && latency < 0) latency = latency * 0.6;
+        if (totalLatency <= 2 && totalLatency >= 0.5 && latency < 0)
+        {
+          latency = latency * 0.2; // REMOVE latency for hitting early (therefore keeping more total latency) if you had a chain of really good timings!
+        }
+        if (totalLatency <= 0.5 && latency < 0) latency = latency * 0.005; // same as before BUT EXTRA cause yuh
         sicks++;
       case 'good':
         Highscore.tallies.good += 1;
         goods++;
+        if (totalLatency > 5 && latency < 0) latency = latency * 0.5; // keep more if the rating is good and you have high total latency
+        if (totalLatency < 5 && totalLatency < 2 && latency < 0) latency = latency * 0.1;
+        if (totalLatency < 2 && latency < 0) latency = latency * -1; // ADD latency for hitting early if you had a chain of really good timings!
       case 'bad':
         bads++;
         Highscore.tallies.bad += 1;
+        if (latency > 0) latency = latency * -1; // should just kill you for this but i guess it'll just be a penalty.
       case 'shit':
         shits++;
         Highscore.tallies.shit += 1;
+        if (latency > 0) latency = latency * -1; // should just kill you for this but i guess it'll just be a penalty.
       case 'miss':
         songMisses++;
         Highscore.tallies.missed += 1;
@@ -2785,7 +2800,19 @@ class PlayState extends MusicBeatSubState
     totalPlayed++;
     var totalNotesHit:Int = Preferences.badsShitsCauseMiss ? Highscore.tallies.totalNotesHit - songMisses : Highscore.tallies.totalNotesHit
       - (songMisses + (shits + bads));
-    ratingPercent = Math.min(1, Math.max(0, totalNotesHit / totalPlayed));
+    if (totalNotesHit < 10) latency = latency * 0.5; // because if you hit it really badly it can cause it to stay at "N/A"
+    if (Preferences.complexAccuracy) totalLatency += latency * 0.01;
+    if (totalLatency < 0) totalLatency = 0;
+    if (totalLatency > totalNotesHit) totalLatency = totalNotesHit - 0.1;
+    var funnyCalc:Float = (totalNotesHit - totalLatency) / totalPlayed;
+    ratingPercent = Math.min(1, Math.max(0, /*totalNotesHit / totalPlayed*/ funnyCalc));
+    // trace('funnyCalc ( ($totalNotesHit - $totalLatency) / $totalPlayed ) = $funnyCalc');
+    /*if (Preferences.debugDisplay)
+        {
+          hitTime.text += '\nTotalLatency (so performance dont fucking die) = $totalLatency'
+            + '\nFunny Calc = ( ($totalNotesHit - $totalLatency) / $totalPlayed ) = $funnyCalc';
+          hitTime.screenCenter(X);
+      }*/
 
     ratingFC = 'Clear (';
     if (shits == 0 && bads == 0 && goods == 0 && sicks == 0 && songMisses == 0) ratingFC = '? (';

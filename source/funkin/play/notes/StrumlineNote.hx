@@ -54,7 +54,7 @@ class StrumlineNote extends FlxSprite
     }
   }
 
-  override function update(elapsed:Float)
+  override function update(elapsed:Float):Void
   {
     super.update(elapsed);
 
@@ -97,18 +97,21 @@ class StrumlineNote extends FlxSprite
   {
     this.active = false;
     this.playAnimation('static', true);
+    if (Preferences.transparentStrumline) this.alpha = 0.5;
   }
 
   public function playPress():Void
   {
     this.active = true;
     this.playAnimation('press', true);
+    if (Preferences.transparentStrumline) this.alpha = 0.5;
   }
 
   public function playConfirm():Void
   {
     this.active = true;
     this.playAnimation('confirm', true);
+    this.alpha = 1;
   }
 
   public function isConfirm():Bool

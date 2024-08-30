@@ -205,6 +205,44 @@ class Preferences
   }
 
   /**
+   * Enhancement suggestion from "https://github.com/FunkinCrew/Funkin/issues/3124"
+   * @default `true`
+   */
+  public static var transparentStrumline(get, set):Bool;
+
+  static function get_transparentStrumline():Bool
+  {
+    return Save?.instance?.options?.transparentStrumline ?? true;
+  }
+
+  static function set_transparentStrumline(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.transparentStrumline = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Does a better job at actually calculating accuracy, but isn't accurate to the results screen
+   * @default `true`
+   */
+  public static var complexAccuracy(get, set):Bool;
+
+  static function get_complexAccuracy():Bool
+  {
+    return Save?.instance?.options?.complexAccuracy ?? true;
+  }
+
+  static function set_complexAccuracy(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.complexAccuracy = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * Loads the user's preferences from the save data and apply them.
    */
   public static function init():Void

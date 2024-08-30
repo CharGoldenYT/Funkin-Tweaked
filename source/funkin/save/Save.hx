@@ -99,6 +99,8 @@ class Save
           extraScoreInfo: true,
           ghostTapping: true,
           showTimings: true,
+          transparentStrumline: false,
+          complexAccuracy: false,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1130,6 +1132,17 @@ typedef SaveDataOptions =
    * @default `true`
    */
   var showTimings:Bool;
+
+  /**
+   * Enhancement suggestion from "https://github.com/FunkinCrew/Funkin/issues/3124"
+   * @default `true`
+   */
+  var transparentStrumline:Bool;
+
+  /**
+   *  Does a better job at actually calculating accuracy, but isn't accurate to the results screen
+   */
+  var complexAccuracy:Bool;
 
   var controls:
     {

@@ -103,6 +103,12 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Show Timings', 'Shows when you hit a note below the rating', function(value:Bool):Void {
       Preferences.showTimings = value;
     }, Preferences.showTimings);
+    createPrefItemCheckbox('Transparent Strum Line', 'Makes the Strum Line 50% transparent', function(value:Bool):Void {
+      Preferences.transparentStrumline = value;
+    }, Preferences.transparentStrumline);
+    createPrefItemCheckbox('Complex Accuracy', 'Factor in hit timing into accuracy.', function(value:Bool):Void {
+      Preferences.complexAccuracy = value;
+    }, Preferences.complexAccuracy);
   }
 
   function createPrefItemCheckbox(prefName:String, prefDesc:String, onChange:Bool->Void, defaultValue:Bool):Void
