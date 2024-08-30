@@ -101,6 +101,7 @@ class Save
           showTimings: true,
           transparentStrumline: false,
           complexAccuracy: false,
+          timer: true,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1143,6 +1144,11 @@ typedef SaveDataOptions =
    *  Does a better job at actually calculating accuracy, but isn't accurate to the results screen
    */
   var complexAccuracy:Bool;
+
+  /**
+   * Whether to show the time remaining in a song.
+   */
+  var timer:Bool;
 
   var controls:
     {

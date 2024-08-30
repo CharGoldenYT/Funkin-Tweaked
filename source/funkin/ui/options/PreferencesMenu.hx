@@ -109,6 +109,9 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Complex Accuracy', 'Factor in hit timing into accuracy.', function(value:Bool):Void {
       Preferences.complexAccuracy = value;
     }, Preferences.complexAccuracy);
+    createPrefItemCheckbox('Timer Bar', 'Show how far you are in a song.', function(value:Bool):Void {
+      Preferences.timer = value;
+    }, Preferences.timer);
   }
 
   function createPrefItemCheckbox(prefName:String, prefDesc:String, onChange:Bool->Void, defaultValue:Bool):Void

@@ -206,7 +206,7 @@ class Preferences
 
   /**
    * Enhancement suggestion from "https://github.com/FunkinCrew/Funkin/issues/3124"
-   * @default `true`
+   * @default `false`
    */
   public static var transparentStrumline(get, set):Bool;
 
@@ -225,7 +225,7 @@ class Preferences
 
   /**
    * Does a better job at actually calculating accuracy, but isn't accurate to the results screen
-   * @default `true`
+   * @default `false`
    */
   public static var complexAccuracy(get, set):Bool;
 
@@ -238,6 +238,25 @@ class Preferences
   {
     var save:Save = Save.instance;
     save.options.complexAccuracy = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Whether to show the time left in a song
+   * @default `true`
+   */
+  public static var timer(get, set):Bool;
+
+  static function get_timer():Bool
+  {
+    return Save?.instance?.options?.timer ?? true;
+  }
+
+  static function set_timer(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.timer = value;
     save.flush();
     return value;
   }

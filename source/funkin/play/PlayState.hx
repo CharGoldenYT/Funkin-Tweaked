@@ -7,6 +7,8 @@ import flixel.FlxCamera;
 import flixel.FlxObject;
 import flixel.FlxState;
 import flixel.FlxSubState;
+import flixel.util.FlxStringUtil;
+import flixel.FlxSprite;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -477,6 +479,7 @@ class PlayState extends MusicBeatSubState
   var totalPlayed:Int = 0;
   var ratingPercent:Float = 0;
   var ratingFC:String = '? (';
+  var timeText:FlxText;
 
   /**
    * The bar which displays the player's health.
@@ -489,6 +492,11 @@ class PlayState extends MusicBeatSubState
    * Emma says the image is slightly skewed so I'm leaving it as an image instead of a `createGraphic`.
    */
   public var healthBarBG:FunkinSprite;
+
+  /**
+   * The amount of song played compared to max length
+   */
+  var songPercent:Float = 0;
 
   /**
    * The health icon representing the player.
@@ -964,6 +972,17 @@ class PlayState extends MusicBeatSubState
 
       Conductor.instance.update(); // Normal conductor update.
     }
+
+    songPercent = Math.max(0, Conductor.instance.songPosition) / currentSongLengthMs;
+    var conductorPos:Float = Conductor.instance.songPosition < 0 ? 0 : Conductor.instance.songPosition;
+    var songPos:Float = conductorPos;
+
+    var songPosString:String = '0:00';
+    if (songPos > 0) songPosString = FlxStringUtil.formatTime(songPos / 1000);
+
+    var songLength:String = FlxStringUtil.formatTime(currentSongLengthMs / 1000);
+
+    timeText.text = songPosString + ' / ' + songLength;
 
     var androidPause:Bool = false;
 
@@ -1585,12 +1604,25 @@ class PlayState extends MusicBeatSubState
 
   var red:FlxColor = Constants.COLOR_HEALTH_BAR_RED;
   var green:FlxColor = Constants.COLOR_HEALTH_BAR_GREEN;
+  var notLane /**lmao**/:FlxSprite;
+  var notLane2 /**lmao**/:FlxSprite;
 
   /**
      * Initializes the health bar on the HUD.
      */
   function initHealthBar():Void
   {
+    notLane = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
+    notLane.alpha = 0.6;
+    notLane.zIndex = 798;
+    notLane.cameras = [camHUD];
+    add(notLane);
+
+    notLane2 = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
+    notLane2.alpha = 0.6;
+    notLane2.zIndex = 799;
+    notLane2.cameras = [camHUD];
+    add(notLane2);
     var currentCharacterDataa:SongCharacterData = currentChart.characters;
     var bf:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.player);
     var dad:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.opponent);
@@ -1628,10 +1660,30 @@ class PlayState extends MusicBeatSubState
     scoreText.zIndex = 802;
     add(scoreText);
 
+    // A timer that shows remaining time pretty simple
+    var timeBar = new FlxBar(0, 20, LEFT_TO_RIGHT, Std.int(healthBarBG.width / 2), Std.int(healthBarBG.height * 1.25), this, "songPercent", 0, 1);
+    timeBar.scrollFactor.set();
+    timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF, true, 0xFF000000);
+    timeBar.zIndex = 803;
+    timeBar.screenCenter(X);
+    add(timeBar);
+    if (!Preferences.timer) timeBar.visible = false;
+
+    // The text that tells you how long till the song is over.
+    timeText = new FlxText(0, 17, timeBar.width, "", 30);
+    timeText.setFormat(Paths.font('vcr.ttf'), 30, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    timeText.scrollFactor.set();
+    timeText.zIndex = 804;
+    timeText.screenCenter(X);
+    add(timeText);
+    if (!Preferences.timer) timeText.visible = false;
+
     // Move the health bar to the HUD camera.
     healthBar.cameras = [camHUD];
     healthBarBG.cameras = [camHUD];
     scoreText.cameras = [camHUD];
+    timeBar.cameras = [camHUD];
+    timeText.cameras = [camHUD];
   }
 
   /**
@@ -1833,11 +1885,21 @@ class PlayState extends MusicBeatSubState
     playerStrumline.zIndex = 1001;
     playerStrumline.cameras = [camHUD];
 
+    // notLane.width = playerStrumline.width;
+    // notLane.height = FlxG.height;
+    // notLane.updateHitbox();
+    notLane.x = playerStrumline.x;
+
     // Position the opponent strumline on the left half of the screen
     opponentStrumline.x = Constants.STRUMLINE_X_OFFSET;
     opponentStrumline.y = Preferences.downscroll ? FlxG.height - opponentStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
     opponentStrumline.zIndex = 1000;
     opponentStrumline.cameras = [camHUD];
+
+    // notLane2.width = opponentStrumline.width;
+    // notLane2.height = FlxG.height;
+    // notLane2.updateHitbox();
+    notLane2.x = opponentStrumline.x;
 
     if (!PlayStatePlaylist.isStoryMode)
     {
@@ -2524,7 +2586,8 @@ class PlayState extends MusicBeatSubState
     var daRating = Scoring.judgeNote(noteDiff, PBOT1);
     if (Preferences.showTimings)
     {
-      hitTime.text = '$noteDiff(Ms)';
+      var latencyRound = FlxMath.roundDecimal(latency, 2);
+      hitTime.text = '$latencyRound(Ms)';
       hitTime.alpha = 1;
       hitTime.screenCenter(X);
       if (latencyTween != null) latencyTween.cancel();
