@@ -133,7 +133,7 @@ class MainMenuState extends MusicBeatState
     });
 
     createMenuItem('credits', 'mainmenu/credits', function() {
-      startExitState(() -> new funkin.ui.credits.CreditsState());
+      startExitState(() -> new funkin.ui.credits.MainCreditsState());
     });
 
     // Reset position of menu items.

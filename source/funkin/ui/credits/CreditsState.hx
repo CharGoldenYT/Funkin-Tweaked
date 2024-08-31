@@ -4,7 +4,7 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import funkin.audio.FunkinSound;
 import flixel.FlxSprite;
-import funkin.ui.mainmenu.MainMenuState;
+import funkin.ui.credits.MainCreditsState;
 import flixel.group.FlxSpriteGroup;
 
 /**
@@ -103,14 +103,14 @@ class CreditsState extends MusicBeatState
     add(creditsGroup);
 
     // Music
-    FunkinSound.playMusic('freeplayRandom',
-      {
-        startingVolume: 0.0,
-        overrideExisting: true,
-        restartTrack: true,
-        loop: true
-      });
-    FlxG.sound.music.fadeIn(6, 0, 0.8);
+    /*FunkinSound.playMusic('freeplayRandom',
+        {
+          startingVolume: 0.0,
+          overrideExisting: true,
+          restartTrack: true,
+          loop: true
+        });
+      FlxG.sound.music.fadeIn(6, 0, 0.8); */
   }
 
   function buildCreditsGroup():Void
@@ -200,7 +200,7 @@ class CreditsState extends MusicBeatState
 
   function exit():Void
   {
-    FlxG.switchState(() -> new MainMenuState());
+    FlxG.switchState(() -> new MainCreditsState());
   }
 
   public override function destroy():Void
