@@ -6,7 +6,7 @@ MAKE SURE THAT YOUR CODE HAS "if (PlayState.instance != null)" BEFORE MESSING WI
 example:
 "if (PlayState.instance != null)
 	{
-		if (PlayState.instance.red == 0xFF00FF)
+		if (PlayState.instance.red == 0xFFFF00FF)
 			{
 				trace('bar is pink');
 			}
@@ -44,4 +44,4 @@ Song Length:
 
 Notes:
 	"forceOpaqueStrumlineVar" Force off Transparent Strums if enabled.
-	"blockStrumlineAlphaChanges" If you need to prevent the press and static anims from changing note alphas, set this to true
+	"blockStrumlineAlphaChanges" If you need to prevent the press, static, AND confirm anims from changing note alphas, or being transparent, set this to true!
