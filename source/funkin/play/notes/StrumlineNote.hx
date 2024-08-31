@@ -97,20 +97,31 @@ class StrumlineNote extends FlxSprite
   {
     this.active = false;
     this.playAnimation('static', true);
-    if (Preferences.transparentStrumline) this.alpha = 0.5;
+    if (!PlayState.instance.blockStrumlineAlphaChanges)
+    {
+      if (Preferences.transparentStrumline && !PlayState.instance.forceOpaqueStrumlineVar) this.alpha = 0.5;
+      if (PlayState.instance.forceOpaqueStrumlineVar && this.alpha == 0.5) this.alpha = 1;
+      // so that if you make it entirely transparent it doesnt fuck with stuff like mid song cutscenes
+    }
   }
 
   public function playPress():Void
   {
     this.active = true;
     this.playAnimation('press', true);
-    if (Preferences.transparentStrumline) this.alpha = 0.5;
+    if (!PlayState.instance.blockStrumlineAlphaChanges)
+    {
+      if (Preferences.transparentStrumline && !PlayState.instance.forceOpaqueStrumlineVar) this.alpha = 0.5;
+      if (PlayState.instance.forceOpaqueStrumlineVar && this.alpha == 0.5) this.alpha = 1;
+      // so that if you make it entirely transparent it doesnt fuck with stuff like mid song cutscenes
+    }
   }
 
   public function playConfirm():Void
   {
     this.active = true;
     this.playAnimation('confirm', true);
+    // There is literally no reasonable case where you would need to not call this.alpha = 1 here.
     this.alpha = 1;
   }
 

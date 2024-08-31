@@ -460,32 +460,43 @@ class PlayState extends MusicBeatSubState
   /**
    * The FlxText that shows last note's hit time
    */
-  var hitTime:FlxText;
+  public var hitTime:FlxText;
 
   /**
    * The FlxText which displays the current score.
    */
-  var scoreText:FlxText;
+  public var scoreText:FlxText;
 
   /**
    * The misses count
    */
-  var songMisses:Int;
+  public var songMisses:Int;
 
-  var sicks:Int = 0;
-  var goods:Int = 0;
-  var bads:Int = 0;
-  var shits:Int = 0;
-  var totalPlayed:Int = 0;
-  var ratingPercent:Float = 0;
-  var ratingFC:String = '? (';
-  var timeText:FlxText;
+  public var sicks:Int = 0;
+  public var goods:Int = 0;
+  public var bads:Int = 0;
+  public var shits:Int = 0;
+  public var totalPlayed:Int = 0;
+  public var ratingPercent:Float = 0;
+
+  public var ratingFC:String = '? (';
+
+  public var timeText:FlxText;
+
+  public var forceOpaqueStrumlineVar:Bool = false;
+
+  public var blockStrumlineAlphaChanges:Bool = false;
 
   /**
    * The bar which displays the player's health.
    * Dynamically updated based on the value of `healthLerp` (which is based on `health`).
    */
   public var healthBar:FlxBar;
+
+  /**
+   * The bar which displays time remaining.
+   */
+  public var timeBar:FlxBar;
 
   /**
    * The background image used for the health bar.
@@ -496,7 +507,7 @@ class PlayState extends MusicBeatSubState
   /**
    * The amount of song played compared to max length
    */
-  var songPercent:Float = 0;
+  public var songPercent:Float = 0;
 
   /**
    * The health icon representing the player.
@@ -595,7 +606,7 @@ class PlayState extends MusicBeatSubState
   /**
    * The length of the current song, in milliseconds.
    */
-  var currentSongLengthMs(get, never):Float;
+  public var currentSongLengthMs(get, never):Float;
 
   function get_currentSongLengthMs():Float
   {
@@ -847,6 +858,12 @@ class PlayState extends MusicBeatSubState
     return true;
   }
 
+  public var songLength:Float;
+
+  var setTotalTime:Bool = false;
+
+  public var conductorPos:Float = 0;
+
   public override function update(elapsed:Float):Void
   {
     // TOTAL: 9.42% CPU Time when profiled in VS 2019.
@@ -966,16 +983,21 @@ class PlayState extends MusicBeatSubState
       Conductor.instance.update(); // Normal conductor update.
     }
 
-    songPercent = Math.max(0, Conductor.instance.songPosition) / currentSongLengthMs;
+    if (!setTotalTime) songLength = currentSongLengthMs;
+    // For soft modding reasons, this only needs to be done until songLength no longer equals 0.
+    if (songLength > 0) setTotalTime = true;
+    songPercent = Math.max(0, Conductor.instance.songPosition) / songLength;
     var conductorPos:Float = Conductor.instance.songPosition < 0 ? 0 : Conductor.instance.songPosition;
     var songPos:Float = conductorPos;
 
-    var songPosString:String = '0:00';
-    if (songPos > 0) songPosString = FlxStringUtil.formatTime(songPos / 1000);
+    var songPosString:String = '';
+    if (songPos > 0) songPosString = FlxStringUtil.formatTime(songPos / 1000) + ' / ';
 
-    var songLength:String = FlxStringUtil.formatTime(currentSongLengthMs / 1000);
+    var songL:String = '';
+    songL = songLength > 0 ? FlxStringUtil.formatTime(songLength / 1000) : '';
 
-    timeText.text = songPosString + ' / ' + songLength;
+    timeText.text = songPosString + songL;
+    timeText.screenCenter(X);
 
     var androidPause:Bool = false;
 
@@ -1595,10 +1617,11 @@ class PlayState extends MusicBeatSubState
     add(cameraFollowPoint);
   }
 
-  var red:FlxColor = Constants.COLOR_HEALTH_BAR_RED;
-  var green:FlxColor = Constants.COLOR_HEALTH_BAR_GREEN;
-  var notLane /**lmao**/:FlxSprite;
-  var notLane2 /**lmao**/:FlxSprite;
+  public var red:FlxColor = Constants.COLOR_HEALTH_BAR_RED;
+  public var green:FlxColor = Constants.COLOR_HEALTH_BAR_GREEN;
+
+  public var notLane /**lmao**/:FlxSprite;
+  public var notLane2 /**lmao**/:FlxSprite;
 
   /**
      * Initializes the health bar on the HUD.
@@ -1666,7 +1689,7 @@ class PlayState extends MusicBeatSubState
     add(scoreText);
 
     // A timer that shows remaining time pretty simple
-    var timeBar = new FlxBar(0, 20, LEFT_TO_RIGHT, Std.int(healthBarBG.width / 2), Std.int(healthBarBG.height * 1.25), this, "songPercent", 0, 1);
+    timeBar = new FlxBar(0, 20, LEFT_TO_RIGHT, Std.int(healthBarBG.width / 2), Std.int(healthBarBG.height * 1.25), this, "songPercent", 0, 1);
     timeBar.scrollFactor.set();
     timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF, true, 0xFF000000);
     timeBar.zIndex = 803;
@@ -2834,7 +2857,9 @@ class PlayState extends MusicBeatSubState
   /**
      * Handles applying health, score, and ratings.
      */
-  var totalLatency:Float;
+  public var totalLatency:Float;
+
+  public var totalNotesHit:Int;
 
   function applyScore(score:Int, daRating:String, healthChange:Float, isComboBreak:Bool, ?latency:Float = 0):Void
   {
@@ -2885,7 +2910,7 @@ class PlayState extends MusicBeatSubState
     songScore += score;
 
     totalPlayed++;
-    var totalNotesHit:Int = Preferences.badsShitsCauseMiss ? Highscore.tallies.totalNotesHit - songMisses : Highscore.tallies.totalNotesHit
+    totalNotesHit = Preferences.badsShitsCauseMiss ? Highscore.tallies.totalNotesHit - songMisses : Highscore.tallies.totalNotesHit
       - (songMisses + (shits + bads));
     if (Preferences.complexAccuracy) totalLatency += latency * 0.001;
     if (totalLatency < 0) totalLatency = 0;
