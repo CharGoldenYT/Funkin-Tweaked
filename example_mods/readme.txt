@@ -17,15 +17,11 @@ Note Lanes:
 	"notLane": FlxSprite for the Player Note Lane
 	"notLane2": Ditto but Opponent
 
-HealthBar:
-	"red" FlxColor for Opponent part of HealthBar not very useful, but good for checking if the Healthbar is a certain color on one side!
-	"green" Ditto but Player
-
 Hit Timing Text:
 	"hitTime" FlxText for when you hit a note, displaying how early or late it was pressed.
 
 Score Text:
-	can now be called via "scoreText" and is a FlxText object.
+	"scoreText" FlxText tracks your score.
 
 Ratings:
 	"sicks", "goods", "bads", "shits" Should be self explanatory. Integer (NOTE: Does not currently mess with Highscore tallies)
@@ -33,14 +29,12 @@ Ratings:
 	"totalNotesHit" How many notes successfully hit. Integer
 	"totalLatency" Combined latency of every hit so far. Float
 	"ratingFC" The string that changes the first half of the rating (i.e. displaying "Perfect! (SFC, ".
+	"ratingPercent" The Float that represents how good you're playing (AKA Accuracy)
 
 Time Bar:
 	"timeBar" FlxBar that displays how much time is left.
 	"timePercent" How much from 0 to one is left on the timer
 	"songLength" How much time until the bar is full in milliseconds basically (Float used in calculations for the Song Time Text).
-
-Song Length:
-	made "currentSongLengthMs" public (NOT SETTABLE, THAT WILL CAUSE ERRORS!) so you can have things happen upon a certain timestamp (use make sure if you're using seconds, to use a seconds to milliseconds converter!)
 
 Notes:
 	"forceOpaqueStrumlineVar" Force off Transparent Strums if enabled.
