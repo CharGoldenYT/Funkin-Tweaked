@@ -121,8 +121,11 @@ class StrumlineNote extends FlxSprite
   {
     this.active = true;
     this.playAnimation('confirm', true);
-    // There is literally no reasonable case where you would need to not call this.alpha = 1 here.
-    this.alpha = 1;
+    if (!PlayState.instance.blockStrumlineAlphaChanges)
+    {
+      // There is literally no reasonable case where you would need to not call this.alpha = 1 here. BUT thats why i added this SPECIFIC case.
+      this.alpha = 1;
+    }
   }
 
   public function isConfirm():Bool
