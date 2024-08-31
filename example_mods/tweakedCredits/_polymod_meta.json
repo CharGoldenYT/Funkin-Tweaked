@@ -1,6 +1,6 @@
 {
     "title": "Funkin' Tweaked Credits Assets",
-    "description": "Assets required by Funkin' Tweaked to render icons in the credits\nTHEORETICALLY ITS NOT NEEDED AND WILL HIDE THE ICONS IF THEY ARE 16x16 HOPEFULLY",
+    "description": "Assets required by Funkin' Tweaked to render icons in the credits\nTHEORETICALLY ITS NOT NEEDED AND WILL HIDE THE ICONS IF THEY ARE NULL HOPEFULLY",
     "author": "Char",
     "api_version": "0.1.0",
     "mod_version": "1.0.0",

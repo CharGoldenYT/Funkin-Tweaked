@@ -7,7 +7,6 @@ import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import funkin.ui.credits.tweaked.TweakedCreditsIcons as TweakedCreditsIcon;
 import funkin.ui.credits.MainCreditsState;
 import funkin.util.WindowUtil;
 import funkin.graphics.FunkinSprite;
@@ -133,7 +132,6 @@ class TweakedCredits extends MusicBeatState
       isSelectable.push(creditsList[i].length >= 3);
       if (creditsList[i].length == 4)
       {
-        // var icon:TweakedCreditsIcon = new TweakedCreditsIcon(0, 0, creditsList[i][3], false);
         var icon:FunkinSprite = FunkinSprite.create(0, 0, 'credits/' + creditsList[i][3]);
         grpIcons.add(icon);
         icon.x = text.x + text.width + 30;
@@ -144,7 +142,6 @@ class TweakedCredits extends MusicBeatState
         }
         catch (e:Dynamic)
         {
-          trace('ERROR! "$e"');
           try
           {
             icon.visible = false;
@@ -153,11 +150,6 @@ class TweakedCredits extends MusicBeatState
           {
             trace('ERROR! "$e"');
           }
-        }
-        if (icon.width == 16)
-        {
-          icon.visible = false;
-          trace('Got an error trying to render the icon!');
         }
       }
     }
