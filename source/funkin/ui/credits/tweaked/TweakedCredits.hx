@@ -10,6 +10,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.ui.credits.tweaked.TweakedCreditsIcons as TweakedCreditsIcon;
 import funkin.ui.credits.MainCreditsState;
 import funkin.util.WindowUtil;
+import funkin.graphics.FunkinSprite;
 
 /**
  * God damn im too used to making Psych menus :waargh:
@@ -57,7 +58,7 @@ class TweakedCredits extends MusicBeatState
 
   var curSelected:Int = 0;
   var grpCredits:FlxTypedGroup<FlxText> /**<Alphabet>**/;
-  var grpIcons:FlxTypedGroup<TweakedCreditsIcons>;
+  var grpIcons:FlxTypedGroup</*TweakedCreditsIcons*/ FunkinSprite>;
 
   /**
    * Whether an entry has a description.
@@ -93,7 +94,7 @@ class TweakedCredits extends MusicBeatState
     add(bg);
 
     grpCredits = new FlxTypedGroup<FlxText>();
-    grpIcons = new FlxTypedGroup<TweakedCreditsIcons>();
+    grpIcons = new FlxTypedGroup</*TweakedCreditsIcons*/ FunkinSprite>();
     add(grpCredits);
     add(grpIcons);
 
@@ -132,10 +133,32 @@ class TweakedCredits extends MusicBeatState
       isSelectable.push(creditsList[i].length >= 3);
       if (creditsList[i].length == 4)
       {
-        var icon:TweakedCreditsIcon = new TweakedCreditsIcon(0, 0, creditsList[i][3], false);
+        // var icon:TweakedCreditsIcon = new TweakedCreditsIcon(0, 0, creditsList[i][3], false);
+        var icon:FunkinSprite = FunkinSprite.create(0, 0, 'credits/' + creditsList[i][3]);
         grpIcons.add(icon);
         icon.x = text.x + text.width + 30;
         icon.y = text.y - 75;
+        try
+        {
+          trace(icon.graphic.assetsKey == null);
+        }
+        catch (e:Dynamic)
+        {
+          trace('ERROR! "$e"');
+          try
+          {
+            icon.visible = false;
+          }
+          catch (e:Dynamic)
+          {
+            trace('ERROR! "$e"');
+          }
+        }
+        if (icon.width == 16)
+        {
+          icon.visible = false;
+          trace('Got an error trying to render the icon!');
+        }
       }
     }
 
