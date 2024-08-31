@@ -276,7 +276,19 @@ class TweakedCredits extends MusicBeatState
   static function fetchCreditsData():funkin.data.JsonFile
   {
     #if !macro
-    var rawJson:String = openfl.Assets.getText(CREDITS_DATA_PATH).trim();
+    var rawJson:String;
+    try
+    {
+      rawJson = openfl.Assets.getText(CREDITS_DATA_PATH).trim();
+    }
+    catch (e:Dynamic)
+    {
+      trace('SHIT, AN ERROR! $e');
+      return {
+        fileName: CREDITS_DATA_PATH,
+        contents: null
+      };
+    }
 
     return {
       fileName: CREDITS_DATA_PATH,
