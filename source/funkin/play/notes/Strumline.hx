@@ -894,7 +894,7 @@ class Strumline extends FlxSpriteGroup
     arrow.y -= 10;
     arrow.alpha = 0.0;
     var finalAlpha = Preferences.transparentStrumline
-      && !PlayState.instance.forceOpaqueStrumlineVar ? 0.5 : 1; // fix for countdown causing funny issues :3
+      && !PlayState.instance.forceOpaqueStrumlineVar ? Preferences.strumTransparency : 1; // fix for countdown causing funny issues :3
     FlxTween.tween(arrow, {y: arrow.y + 10, alpha: finalAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * index)});
   }
 

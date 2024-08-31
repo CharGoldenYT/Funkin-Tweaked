@@ -263,7 +263,7 @@ class Preferences
 
   /**
    * Whether to show not lanes
-   * @default `true`
+   * @default `false`
    */
   public static var lanes(get, set):Bool;
 
@@ -276,6 +276,67 @@ class Preferences
   {
     var save:Save = Save.instance;
     save.options.lanes = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Whether to show opponent lanes
+   * @default `true`
+   */
+  public static var oppLanes(get, set):Bool;
+
+  static function get_oppLanes():Bool
+  {
+    return Save?.instance?.options?.oppLanes ?? true;
+  }
+
+  static function set_oppLanes(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.oppLanes = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * transparency of lanes
+   * @default `0.6`
+   */
+  public static var laneTransparency(get, set):Float;
+
+  static function get_laneTransparency():Float
+  {
+    var save:Save = Save.instance;
+    var float:Float = save.options.laneTransparency;
+    return float;
+  }
+
+  static function set_laneTransparency(value:Float):Float
+  {
+    var save:Save = Save.instance;
+    save.options.laneTransparency = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * transparency of lanes
+   * @default `0.6`
+   */
+  public static var strumTransparency(get, set):Float;
+
+  static function get_strumTransparency():Float
+  {
+    var save:Save = Save.instance;
+    var float:Float = save.options.strumTransparency;
+    return float;
+  }
+
+  static function set_strumTransparency(value:Float):Float
+  {
+    var save:Save = Save.instance;
+    save.options.strumTransparency = value;
     save.flush();
     return value;
   }

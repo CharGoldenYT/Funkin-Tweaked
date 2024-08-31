@@ -103,6 +103,9 @@ class Save
           complexAccuracy: false,
           timer: true,
           lanes: false,
+          oppLanes: true,
+          laneTransparency: 0.6,
+          strumTransparency: 0.5,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1151,7 +1154,25 @@ typedef SaveDataOptions =
    */
   var timer:Bool;
 
+  /**
+   * Whether to show lanes under your notes
+   */
   var lanes:Bool;
+
+  /**
+   * Whether to show lanes under opponent notes
+   */
+  var oppLanes:Bool;
+
+  /**
+   * How transparent you want your lanes to be
+   */
+  var laneTransparency:Float;
+
+  /**
+   * How transparent you want your strums to be.
+   */
+  var strumTransparency:Float;
 
   var controls:
     {

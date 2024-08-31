@@ -25,14 +25,14 @@ class TweakedCredits extends MusicBeatState
    * @param Icon The name of the image in `assets/images/credits/` to use.
    */
   var creditsList:Array<Array<String>> = [
-    ["Funkin' Tweaked"],
+    ["Funkin' Tweaked", 'headerObject'],
     [
       'CharGolden',
       "Coded Funkin' Tweaked",
       "https://www.youtube.com/channel/UC930b1Q9I8Ufdv-8uKX1mtw/",
       'char'
     ],
-    ["Suggestors, Collaborators, and Other"],
+    ["Suggestors, Collaborators, and Other", 'headerObject'],
     [
       'ShadowMario',
       "Coded Psych Engine, of which i based some code off of.",
@@ -43,7 +43,12 @@ class TweakedCredits extends MusicBeatState
     [
       'JamJarIsDumb',
       "Originally thought of the option for a transparent Strumline",
-      "https://github.com/JamJarIsDumb"
+      "https://github.com/FunkinCrew/Funkin/issues/3124"
+    ],
+    [
+      'FlooferLand',
+      'Coded the new Pref Item Types',
+      'https://github.com/FlooferLand/PhantomaFork/tree/new-settings-items'
     ]
   ];
 
@@ -138,7 +143,7 @@ class TweakedCredits extends MusicBeatState
         icon.y = text.y - 75;
         try
         {
-          trace(icon.graphic.assetsKey == null);
+          var variable:Bool = icon.graphic.assetsKey == null; // so that it still trys to attach itself, but doesn't trace each time
         }
         catch (e:Dynamic)
         {
@@ -173,6 +178,7 @@ class TweakedCredits extends MusicBeatState
 
   override function update(elapsed:Float):Void
   {
+    if (curSelected == 0 && creditsList[curSelected][1] == 'headerObject') changeSelection(1);
     if (controls.UI_RIGHT_P || controls.UI_DOWN_P)
     {
       changeSelection(1);
@@ -185,7 +191,7 @@ class TweakedCredits extends MusicBeatState
     {
       if (isSelectable[curSelected])
       {
-        WindowUtil.openURL(creditsList[curSelected][3]);
+        browserLoad(creditsList[curSelected][2]);
       }
     }
     if (controls.BACK)
@@ -200,6 +206,12 @@ class TweakedCredits extends MusicBeatState
     curSelected += change;
     if (curSelected < 0) curSelected = creditsList.length - 1;
     if (curSelected >= creditsList.length) curSelected = 0;
+
+    if (curSelected > 0 && creditsList[curSelected][1] == 'headerObject')
+    {
+      changeSelection(change);
+      return;
+    }
 
     FlxG.sound.play(Paths.sound('scrollMenu'));
     camFollow.y = grpCredits.members[curSelected].y;
@@ -227,5 +239,15 @@ class TweakedCredits extends MusicBeatState
       descText.visible = false;
       descText.text = '';
     }
+  }
+
+  // Because dumb idiot WindowUtil broke on me >:(
+  function browserLoad(site:String)
+  {
+    #if linux
+    Sys.command('/usr/bin/xdg-open', [site]);
+    #else
+    FlxG.openURL(site);
+    #end
   }
 }

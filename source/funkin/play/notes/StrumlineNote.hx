@@ -99,7 +99,7 @@ class StrumlineNote extends FlxSprite
     this.playAnimation('static', true);
     if (!PlayState.instance.blockStrumlineAlphaChanges)
     {
-      if (Preferences.transparentStrumline && !PlayState.instance.forceOpaqueStrumlineVar) this.alpha = 0.5;
+      if (Preferences.transparentStrumline && !PlayState.instance.forceOpaqueStrumlineVar) this.alpha = Preferences.strumTransparency;
       if (PlayState.instance.forceOpaqueStrumlineVar && this.alpha == 0.5) this.alpha = 1;
       // so that if you make it entirely transparent it doesnt fuck with stuff like mid song cutscenes
     }
@@ -111,7 +111,7 @@ class StrumlineNote extends FlxSprite
     this.playAnimation('press', true);
     if (!PlayState.instance.blockStrumlineAlphaChanges)
     {
-      if (Preferences.transparentStrumline && !PlayState.instance.forceOpaqueStrumlineVar) this.alpha = 0.5;
+      if (Preferences.transparentStrumline && !PlayState.instance.forceOpaqueStrumlineVar) this.alpha = Preferences.strumTransparency;
       if (PlayState.instance.forceOpaqueStrumlineVar && this.alpha == 0.5) this.alpha = 1;
       // so that if you make it entirely transparent it doesnt fuck with stuff like mid song cutscenes
     }

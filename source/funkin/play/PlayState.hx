@@ -1630,14 +1630,14 @@ class PlayState extends MusicBeatSubState
   {
     // Player Note Lane
     notLane = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
-    notLane.alpha = 0.6;
+    notLane.alpha = Preferences.laneTransparency;
     notLane.zIndex = 798;
     notLane.cameras = [camHUD];
     add(notLane);
 
     // Opponent Note Lane
     notLane2 = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
-    notLane2.alpha = 0.6;
+    notLane2.alpha = Preferences.laneTransparency;
     notLane2.zIndex = 799;
     notLane2.cameras = [camHUD];
     add(notLane2);
@@ -1929,7 +1929,7 @@ class PlayState extends MusicBeatSubState
     // notLane2.height = FlxG.height;
     // notLane2.updateHitbox();
     notLane2.x = opponentStrumline.x;
-    if (Preferences.lanes)
+    if (Preferences.lanes && Preferences.oppLanes)
     {
       if (!opponentStrumline.visible || currentSong.id == 'blazin')
       {
