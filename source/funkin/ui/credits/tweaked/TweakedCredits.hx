@@ -10,6 +10,15 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.ui.credits.MainCreditsState;
 import funkin.util.WindowUtil;
 import funkin.graphics.FunkinSprite;
+import funkin.data.JsonFile;
+import lime.system.System;
+import sys.io.File;
+
+typedef CreditsFile =
+{
+  var comment:String;
+  var creditsListData:Array<Array<String>>;
+}
 
 /**
  * God damn im too used to making Psych menus :waargh:
@@ -24,33 +33,7 @@ class TweakedCredits extends MusicBeatState
    * @param Link If selected, direct the player here!
    * @param Icon The name of the image in `assets/images/credits/` to use.
    */
-  var creditsList:Array<Array<String>> = [
-    ["Funkin' Tweaked", 'headerObject'],
-    [
-      'CharGolden',
-      "Coded Funkin' Tweaked",
-      "https://www.youtube.com/channel/UC930b1Q9I8Ufdv-8uKX1mtw/",
-      'char'
-    ],
-    ["Suggestors, Collaborators, and Other", 'headerObject'],
-    [
-      'ShadowMario',
-      "Coded Psych Engine, of which i based some code off of.",
-      "https://twitter.com/Shadow_Mario_",
-      'shadowmario'
-    ],
-    ['djebuscool', "Suggested Note Lanes", "https://gamebanana.com/members/1981704"],
-    [
-      'JamJarIsDumb',
-      "Originally thought of the option for a transparent Strumline",
-      "https://github.com/FunkinCrew/Funkin/issues/3124"
-    ],
-    [
-      'FlooferLand',
-      'Coded the new Pref Item Types',
-      'https://github.com/FlooferLand/PhantomaFork/tree/new-settings-items'
-    ]
-  ];
+  var creditsList:Array<Array<String>> = [];
 
   // Draw Objects
   var bg:FlxSprite;
@@ -75,8 +58,16 @@ class TweakedCredits extends MusicBeatState
   var descBox:FlxSprite;
   var descText:FlxText;
 
+  public var nextOffset:Int = 0;
+
   override function create():Void
   {
+    if (CREDITS_DATA != null) doCreditsMerge();
+    if (creditsList.length < 1) creditsList = [['No Credits Loaded!', '', '', '']];
+    #if TEST_ARRAY
+    creditsList.push([]); // funny
+    #end
+    nextOffset = 0;
     camDesc = new FlxCamera();
     camCredits = new FlxCamera();
     camFollow = new FlxObject(FlxG.width / 2, 0, 140, 70);
@@ -104,60 +95,7 @@ class TweakedCredits extends MusicBeatState
 
     hasDesc = [];
     isSelectable = []; // So it gets reset every state load.
-
-    var nextOffset:Int = 0;
-    for (i in 0...creditsList.length)
-    {
-      var array:Array<String> = creditsList[i];
-      var tooShort:Bool = false;
-      if (array.length < 1) tooShort = true;
-      if (tooShort)
-      {
-        trace('creditsList[$i] is too short! double check that it is a proper array!');
-        return;
-      }
-      var size:Int = 30;
-      var yPos:Int = (150 * i) + nextOffset;
-      if (array.length == 1)
-      {
-        size = 50;
-        yPos += 150;
-        nextOffset += 150;
-      }
-      var text:FlxText = new FlxText(0, yPos, 0, creditsList[i][0], size);
-      text.setFormat(Paths.font('vcr.ttf'), size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
-      text.screenCenter(X);
-      if (text.text == '' || text.text == null)
-      {
-        trace('Error with setting text!');
-        text.text = 'Got an error trying to get name!';
-      }
-      grpCredits.add(text);
-      hasDesc.push(creditsList[i].length >= 2);
-      isSelectable.push(creditsList[i].length >= 3);
-      if (creditsList[i].length == 4)
-      {
-        var icon:FunkinSprite = FunkinSprite.create(0, 0, 'credits/' + creditsList[i][3]);
-        grpIcons.add(icon);
-        icon.x = text.x + text.width + 30;
-        icon.y = text.y - 75;
-        try
-        {
-          var variable:Bool = icon.graphic.assetsKey == null; // so that it still trys to attach itself, but doesn't trace each time
-        }
-        catch (e:Dynamic)
-        {
-          try
-          {
-            icon.visible = false;
-          }
-          catch (e:Dynamic)
-          {
-            trace('ERROR! "$e"');
-          }
-        }
-      }
-    }
+    spawnCredits();
 
     descBox = new FlxSprite().makeGraphic(FlxG.width - 24, 200, 0x99000000);
     descBox.y = FlxG.height - (descBox.height + 5);
@@ -198,6 +136,58 @@ class TweakedCredits extends MusicBeatState
     {
       FlxG.sound.play('cancelMenu');
       FlxG.switchState(() -> new MainCreditsState());
+    }
+  }
+
+  function spawnCredits():Void
+  {
+    for (i in 0...creditsList.length)
+    {
+      var array:Array<String> = creditsList[i];
+      var tooShort:Bool = false;
+      if (array.length < 1) tooShort = true;
+      var size:Int = 30;
+      var yPos:Int = (150 * i) + nextOffset;
+      if (array.length == 1)
+      {
+        size = 50;
+        yPos += 150;
+        nextOffset += 150;
+      }
+      var textString:String = !tooShort ? creditsList[i][0] : 'This array, "creditsList[$i]" was fucking empty\nMight wanna recheck that lmao';
+      var text:FlxText = new FlxText(0, yPos, 0, textString, size);
+      text.setFormat(Paths.font('vcr.ttf'), size, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+      text.screenCenter(X);
+      if (text.text == '' || text.text == null)
+      {
+        trace('Error with setting text!');
+        text.text = 'Got an error trying to get name!';
+      }
+      grpCredits.add(text);
+      hasDesc.push(creditsList[i].length >= 2);
+      isSelectable.push(creditsList[i].length >= 3);
+      if (creditsList[i].length == 4)
+      {
+        var icon:FunkinSprite = FunkinSprite.create(0, 0, 'credits/' + creditsList[i][3]);
+        grpIcons.add(icon);
+        icon.x = text.x + text.width + 30;
+        icon.y = text.y - 75;
+        try
+        {
+          var variable:Bool = icon.graphic.assetsKey == null; // so that it still trys to attach itself, but doesn't trace each time
+        }
+        catch (e:Dynamic)
+        {
+          try
+          {
+            icon.visible = false;
+          }
+          catch (e:Dynamic)
+          {
+            trace('ERROR! "$e"');
+          }
+        }
+      }
     }
   }
 
@@ -249,5 +239,70 @@ class TweakedCredits extends MusicBeatState
     #else
     FlxG.openURL(site);
     #end
+  }
+
+  static final CREDITS_DATA_PATH:String = 'assets/data/credits/credits.json';
+
+  public static var CREDITS_DATA(get, default):Null<CreditsFile> = null;
+
+  static function get_CREDITS_DATA():CreditsFile
+  {
+    if (CREDITS_DATA == null) CREDITS_DATA = parseCreditsData(fetchCreditsData());
+
+    return CREDITS_DATA;
+  }
+
+  static function parseCreditsData(file:JsonFile):Null<CreditsFile>
+  {
+    #if !macro
+    if (file.contents == null) return null;
+
+    var parser = new json2object.JsonParser<CreditsFile>();
+    parser.ignoreUnknownVariables = false;
+    trace('[CREDITS] Parsing credits data from ${CREDITS_DATA_PATH}');
+    parser.fromJson(file.contents, file.fileName);
+
+    if (parser.errors.length > 0)
+    {
+      printErrors(parser.errors, file.fileName);
+      return null;
+    }
+    return parser.value;
+    #else
+    return null;
+    #end
+  }
+
+  static function fetchCreditsData():funkin.data.JsonFile
+  {
+    #if !macro
+    var rawJson:String = openfl.Assets.getText(CREDITS_DATA_PATH).trim();
+
+    return {
+      fileName: CREDITS_DATA_PATH,
+      contents: rawJson
+    };
+    #else
+    return {
+      fileName: CREDITS_DATA_PATH,
+      contents: null
+    };
+    #end
+  }
+
+  function doCreditsMerge():Void
+  {
+    for (array in CREDITS_DATA.creditsListData)
+    {
+      if (!creditsList.contains(array)) creditsList.push(array);
+    }
+  }
+
+  static function printErrors(errors:Array<json2object.Error>, id:String = ''):Void
+  {
+    trace('[CREDITS] Failed to parse credits data: ${id}');
+
+    for (error in errors)
+      funkin.data.DataError.printError(error);
   }
 }

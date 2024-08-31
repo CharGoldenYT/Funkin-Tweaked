@@ -269,4 +269,8 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 		<!-- Determines the file in the mod folder used for the icon. -->
 		<haxedef name="POLYMOD_MOD_ICON_FILE" value="_polymod_icon.png" />
 	</section>
+	<!-- 
+		This flag adds a blank array to the credits array to test if the error message of the tweaked credits state works properly
+	-->
+	<!-- <haxedef name="TEST_ARRAY"/> -->
 </project>
