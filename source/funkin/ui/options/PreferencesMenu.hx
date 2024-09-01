@@ -27,6 +27,7 @@ class PreferencesMenu extends Page
   var descText:FlxText;
   var funnyToggle:Bool = false;
   var defaultZoom:Float = 0;
+  var fakeOption:String = 'Default';
 
   public function new()
   {
@@ -124,6 +125,9 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Note Lanes', 'Adds a slightly transparent lane under the Strumline', function(value:Bool):Void {
       Preferences.lanes = value;
     }, Preferences.lanes);
+    createPrefItemEnum('Note Skin', 'What Note Skin to use when playing a chart', NoteSkinEnum.noteskinOptions, function(value:String) {
+      fakeOption = value;
+    }, fakeOption);
 
     createPrefHeader('Tweaked Extra Options');
 

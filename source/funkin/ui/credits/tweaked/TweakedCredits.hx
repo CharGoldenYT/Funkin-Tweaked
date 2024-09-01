@@ -5,15 +5,14 @@ import flixel.FlxObject;
 import flixel.FlxCamera;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
-import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import funkin.ui.credits.MainCreditsState;
-import funkin.util.WindowUtil;
 import funkin.graphics.FunkinSprite;
 import funkin.data.JsonFile;
-import lime.system.System;
-import sys.io.File;
 
+/**
+ * The file used for getting credits
+ */
 typedef CreditsFile =
 {
   var comment:String;
@@ -45,7 +44,7 @@ class TweakedCredits extends MusicBeatState
 
   var curSelected:Int = 0;
   var grpCredits:FlxTypedGroup<FlxText> /**<Alphabet>**/;
-  var grpIcons:FlxTypedGroup</*TweakedCreditsIcons*/ FunkinSprite>;
+  var grpIcons:FlxTypedGroup<FunkinSprite>;
 
   /**
    * Whether an entry has a description.
@@ -58,6 +57,9 @@ class TweakedCredits extends MusicBeatState
   var descBox:FlxSprite;
   var descText:FlxText;
 
+  /**
+   * If a header exists, this will prevent items from overlapping after enough headers are loaded
+   */
   public var nextOffset:Int = 0;
 
   override function create():Void
@@ -174,15 +176,15 @@ class TweakedCredits extends MusicBeatState
         icon.y = text.y - 75;
         try
         {
-          var variable:Bool = icon.graphic.assetsKey == null; // so that it still trys to attach itself, but doesn't trace each time
+          icon.graphic.assetsKey == null; // so that it still trys to attach itself, but doesn't trace each time
         }
-        catch (e:Dynamic)
+        catch (e:Any)
         {
           try
           {
             icon.visible = false;
           }
-          catch (e:Dynamic)
+          catch (e:Any)
           {
             trace('ERROR! "$e"');
           }
@@ -232,7 +234,7 @@ class TweakedCredits extends MusicBeatState
   }
 
   // Because dumb idiot WindowUtil broke on me >:(
-  function browserLoad(site:String)
+  function browserLoad(site:String):Void
   {
     #if linux
     Sys.command('/usr/bin/xdg-open', [site]);
@@ -243,6 +245,9 @@ class TweakedCredits extends MusicBeatState
 
   static final CREDITS_DATA_PATH:String = 'assets/data/credits/credits.json';
 
+  /**
+   * yuh
+   */
   public static var CREDITS_DATA(get, default):Null<CreditsFile> = null;
 
   static function get_CREDITS_DATA():CreditsFile
@@ -281,7 +286,7 @@ class TweakedCredits extends MusicBeatState
     {
       rawJson = openfl.Assets.getText(CREDITS_DATA_PATH).trim();
     }
-    catch (e:Dynamic)
+    catch (e:Any)
     {
       trace('SHIT, AN ERROR! $e');
       return {
@@ -315,6 +320,8 @@ class TweakedCredits extends MusicBeatState
     trace('[CREDITS] Failed to parse credits data: ${id}');
 
     for (error in errors)
+    {
       funkin.data.DataError.printError(error);
+    }
   }
 }
