@@ -87,8 +87,7 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 	<assets path="assets/week7" library="week7" exclude="*.fla|*.mp3|*.wav" unless="web" />
 	<assets path="assets/weekend1" library="weekend1" exclude="*.fla|*.ogg|*.wav" if="web" />
 	<assets path="assets/weekend1" library="weekend1" exclude="*.fla|*.mp3|*.wav" unless="web" />
-	<assets path='example_mods/tweakedCredits' rename='mods/tweakedCredits'/>
-	<assets path='example_mods/noteSkinTest' rename='mods/noteSkinTest' if="TEST_NOTE_SKIN"/>
+	<assets path='example_mods/noteSkinTest' rename='mods/noteSkinTest'/>
 	<!-- the next 2 lines are specifically meant to be used when exporting for GameBanana, save to delete! -->
 	<assets path='example_mods/tweakedCredits' rename='export/mods/tweakedCredits'/>
 	<assets path='example_mods/readme.txt' rename='export/IMPORTANT README.txt'/>
@@ -274,8 +273,4 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 		This flag adds a blank array to the credits array to test if the error message of the tweaked credits state works properly
 	-->
 	<!-- <haxedef name="TEST_ARRAY"/> -->
-	<!--
-		This flag determines whether to include the noteskin test mod to test the noteskin option
-	-->
-	<haxedef name="TEST_NOTE_SKIN"/>
 </project>
