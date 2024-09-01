@@ -106,6 +106,7 @@ class Save
           oppLanes: true,
           laneTransparency: 0.6,
           strumTransparency: 0.5,
+          animsGhostTap: true,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1173,6 +1174,11 @@ typedef SaveDataOptions =
    * How transparent you want your strums to be.
    */
   var strumTransparency:Float;
+
+  /**
+   * Whether to show sing anims on ghost tap
+   */
+  var animsGhostTap:Bool;
 
   var controls:
     {

@@ -281,6 +281,25 @@ class Preferences
   }
 
   /**
+   * Whether to show not lanes
+   * @default `false`
+   */
+  public static var animsGhostTap(get, set):Bool;
+
+  static function get_animsGhostTap():Bool
+  {
+    return Save?.instance?.options?.animsGhostTap ?? true;
+  }
+
+  static function set_animsGhostTap(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.animsGhostTap = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * Whether to show opponent lanes
    * @default `true`
    */

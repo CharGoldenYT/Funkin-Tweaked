@@ -2578,6 +2578,7 @@ class PlayState extends MusicBeatSubState
       else if (notesInDirection.length == 0)
       {
         // Press a key with no penalty.
+        if (Preferences.animsGhostTap) ghostTap(input.noteDirection, false);
 
         // Play the strumline animation.
         playerStrumline.playPress(input.noteDirection);
@@ -2793,6 +2794,57 @@ class PlayState extends MusicBeatSubState
       vocals.playerVolume = 0;
       FunkinSound.playOnce(Paths.soundRandom('missnote', 1, 3), FlxG.random.float(0.1, 0.2));
     }
+  }
+
+  /**
+     * Called when a player presses a key with no note present.
+     * Scripts can modify the amount of health/score lost, whether player animations or sounds are used,
+     * or even cancel the event entirely.
+     *
+     * @param direction
+     */
+  function ghostTap(direction:NoteDirection, hasPossibleNotes:Bool = true):Void
+  {
+    var event:GhostMissNoteScriptEvent = new GhostMissNoteScriptEvent(direction, // Direction missed in.
+      hasPossibleNotes, // Whether there was a note you could have hit.
+      - 0, // How much health to add (negative).
+      - 0 // Amount of score to add (negative).
+    );
+    dispatchEvent(event);
+
+    // Calling event.cancelEvent() skips animations and penalties. Neat!
+    if (event.eventCanceled) return;
+
+    health += hasPossibleNotes ? -(1 * Constants.HEALTH_MISS_PENALTY) : 0;
+    songScore += hasPossibleNotes ? -10 : 0;
+
+    if (!isPracticeMode)
+    {
+      var pressArray:Array<Bool> = [
+        controls.NOTE_LEFT_P,
+        controls.NOTE_DOWN_P,
+        controls.NOTE_UP_P,
+        controls.NOTE_RIGHT_P
+      ];
+
+      var indices:Array<Int> = [];
+      for (i in 0...pressArray.length)
+      {
+        if (pressArray[i]) indices.push(i);
+      }
+      for (i in 0...indices.length)
+      {
+        inputSpitter.push(
+          {
+            t: Std.int(Conductor.instance.songPosition),
+            d: indices[i],
+            l: 20
+          });
+      }
+    }
+    // So i don't have to type this shit out manually
+    var target:BaseCharacter = instance.currentStage.getBoyfriend();
+    target.playSingAnimation(direction);
   }
 
   /**

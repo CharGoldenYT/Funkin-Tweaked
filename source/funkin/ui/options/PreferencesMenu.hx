@@ -121,7 +121,7 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Timer Bar', 'Show how far you are in a song.', function(value:Bool):Void {
       Preferences.timer = value;
     }, Preferences.timer);
-    createPrefItemCheckbox('Note Lanes', 'adds a slightly transparent lane under the Strumline', function(value:Bool):Void {
+    createPrefItemCheckbox('Note Lanes', 'Adds a slightly transparent lane under the Strumline', function(value:Bool):Void {
       Preferences.lanes = value;
     }, Preferences.lanes);
 
@@ -136,6 +136,9 @@ class PreferencesMenu extends Page
     createPrefItemNumber('Lane Transparency', 'How transparent should the Note Lanes be?', function(value:Float):Void {
       Preferences.laneTransparency = value;
     }, null, Preferences.laneTransparency, 0, 1, 0.1, 1);
+    createPrefItemCheckbox('Ghost Tap Anims', 'Whether to show sing animations on ghost tap', function(value:Bool):Void {
+      Preferences.animsGhostTap = value;
+    }, Preferences.animsGhostTap);
   }
 
   override function update(elapsed:Float):Void
