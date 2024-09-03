@@ -6,9 +6,9 @@ MAKE SURE THAT YOUR CODE HAS "if (PlayState.instance != null)" BEFORE MESSING WI
 example:
 "if (PlayState.instance != null)
 	{
-		if (PlayState.instance.red == 0xFFFF00FF)
+		if (PlayState.instance.sicks == 5)
 			{
-				trace('bar is pink');
+				trace('nice!');
 			}
 	}
 
