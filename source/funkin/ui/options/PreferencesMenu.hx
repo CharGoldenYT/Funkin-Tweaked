@@ -125,9 +125,9 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Note Lanes', 'Adds a slightly transparent lane under the Strumline', function(value:Bool):Void {
       Preferences.lanes = value;
     }, Preferences.lanes);
-    createPrefItemEnum('Note Skin', 'What Note Skin to use when playing a chart', NoteSkinEnum.noteskinOptions, function(value:String) {
+    /*createPrefItemEnum('Note Skin', 'What Note Skin to use when playing a chart', NoteSkinEnum.noteskinOptions, function(value:String) {
       fakeOption = value;
-    }, fakeOption);
+    }, fakeOption);*/
 
     createPrefHeader('Tweaked Extra Options');
 
@@ -167,17 +167,20 @@ class PreferencesMenu extends Page
         }
         else
         {
+          daItem.x = 120;
           // dumb thing
-          if (items.selectedIndex == 0 && daItem.textDesc == 'headerObject')
+          if (items.selectedIndex == 0 && daItem.textDesc == 'headerObject' && !controls.UI_UP)
+            /**Make sure that if its the FIRST entry and no controls have been pressed to NOT accidentally softlock people.**/
           {
             items.selectItem(items.selectedIndex + 1);
             return; // MAKE SURE TO STOP HERE IF THIS IS THE CASE!
           }
           // Going down is easy just increment upward (Weird sounding i know)
           if (controls.UI_DOWN) items.selectItem(items.selectedIndex + 1);
-          // Going up is also easy, but you need to increment downward
+          // Going up is also easy, but you need to increment downward with checks for what place the item is!
           if (controls.UI_UP && items.selectedIndex != 0 /**Prevents crashing by staying in bounds**/) items.selectItem(items.selectedIndex - 1);
-          if (controls.UI_UP && items.selectedIndex == 0 /**Prevents crashing by staying in bounds**/) items.selectItem(items.selectedIndex + 1);
+
+          if (controls.UI_UP && items.selectedIndex == 0 /**Prevents crashing by staying in bounds**/) items.selectItem(items.length - 1);
         }
       }
       else

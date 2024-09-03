@@ -118,7 +118,9 @@ class TweakedCredits extends MusicBeatState
 
   override function update(elapsed:Float):Void
   {
-    if (curSelected == 0 && creditsList[curSelected][1] == 'headerObject') changeSelection(1);
+    if (curSelected == 0 && creditsList[curSelected][1] == 'headerObject' && controls.UI_LEFT) changeSelection(-1, true);
+    if (curSelected == 0 && creditsList[curSelected][1] == 'headerObject' && controls.UI_UP) changeSelection(-1, true);
+    if (curSelected == 0 && creditsList[curSelected][1] == 'headerObject') changeSelection(1, true);
     if (controls.UI_RIGHT_P || controls.UI_DOWN_P)
     {
       changeSelection(1);
@@ -193,7 +195,7 @@ class TweakedCredits extends MusicBeatState
     }
   }
 
-  function changeSelection(change:Int = 0):Void
+  function changeSelection(change:Int = 0, ?mute:Bool = false):Void
   {
     curSelected += change;
     if (curSelected < 0) curSelected = creditsList.length - 1;
@@ -205,7 +207,7 @@ class TweakedCredits extends MusicBeatState
       return;
     }
 
-    FlxG.sound.play(Paths.sound('scrollMenu'));
+    if (!mute) FlxG.sound.play(Paths.sound('scrollMenu')); // so you dont get double the scroll sound lmao.
     camFollow.y = grpCredits.members[curSelected].y;
     for (i in 0...grpCredits.members.length)
     {
