@@ -107,6 +107,7 @@ class Save
           laneTransparency: 0.6,
           strumTransparency: 0.5,
           animsGhostTap: true,
+          centerStrums: false,
           inputOffset: 0,
           audioVisualOffset: 0,
 
@@ -1179,6 +1180,11 @@ typedef SaveDataOptions =
    * Whether to show sing anims on ghost tap
    */
   var animsGhostTap:Bool;
+
+  /**
+   * Whether to properly center the strums
+   */
+  var centerStrums:Bool;
 
   var controls:
     {

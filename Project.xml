@@ -87,11 +87,13 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 	<assets path="assets/week7" library="week7" exclude="*.fla|*.mp3|*.wav" unless="web" />
 	<assets path="assets/weekend1" library="weekend1" exclude="*.fla|*.ogg|*.wav" if="web" />
 	<assets path="assets/weekend1" library="weekend1" exclude="*.fla|*.mp3|*.wav" unless="web" />
+	<!-- REMINDER, REMOVE THESE WHEN MAKING THE FINAL BUILD!!!! -->
 	<assets path='example_mods/noteSkinTest' rename='mods/noteSkinTest'/>
 	<assets path='example_mods/tweakedAssets' rename='mods/tweakedAssets'/>
 	<!-- the next 2 lines are specifically meant to be used when exporting for GameBanana, safe to delete! -->
 	<assets path='example_mods/tweakedAssets' rename='export/mods/tweakedAssets'/>
 	<assets path='example_mods/readme.txt' rename='export/IMPORTANT README.txt'/>
+	<!-- THIS ENDS THE "TO BE REMOVED" SECTION -->
 	<!--
 		AUTOMATICALLY MOVING EXAMPLE MODS INTO THE BUILD CAUSES ISSUES
 		Currently, this line will add the mod files to the library manifest,

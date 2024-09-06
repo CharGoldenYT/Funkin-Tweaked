@@ -128,6 +128,9 @@ class PreferencesMenu extends Page
     /*createPrefItemEnum('Note Skin', 'What Note Skin to use when playing a chart', NoteSkinEnum.noteskinOptions, function(value:String) {
       fakeOption = value;
     }, fakeOption);*/
+    createPrefItemCheckbox('Center Strums', 'Whether to fix the strum offset.', function(value:Bool):Void {
+      Preferences.centerStrums = value;
+    }, Preferences.centerStrums);
 
     createPrefHeader('Tweaked Extra Options');
 

@@ -8,6 +8,8 @@ import funkin.data.song.SongData.SongEventData;
 import funkin.play.event.SongEvent;
 import funkin.data.event.SongEventSchema;
 import funkin.data.event.SongEventSchema.SongEventFieldType;
+//  FlxColor for Time Bar
+import flixel.util.FlxColor;
 
 /**
  * This class represents a handler for a type of song event.
@@ -94,8 +96,10 @@ class FocusCameraSongEvent extends SongEvent
         }
         // trace('Focusing camera on player.');
         var bfPoint = currentStage.getBoyfriend().cameraFocusPoint;
+        var bfColors = currentStage.getBoyfriend().healthBarColor;
         targetX += bfPoint.x;
         targetY += bfPoint.y;
+        if (!PlayState.instance.blockTimeBarColorChange) PlayState.instance.timeBar.setColors(FlxColor.fromRGB(bfColors[0], bfColors[1], bfColors[2]));
 
       case 1: // Dad (focus on opponent)
         if (currentStage.getDad() == null)
@@ -105,8 +109,10 @@ class FocusCameraSongEvent extends SongEvent
         }
         // trace('Focusing camera on opponent.');
         var dadPoint = currentStage.getDad().cameraFocusPoint;
+        var dadColors = currentStage.getDad().healthBarColor;
         targetX += dadPoint.x;
         targetY += dadPoint.y;
+        if (!PlayState.instance.blockTimeBarColorChange) PlayState.instance.timeBar.setColors(FlxColor.fromRGB(dadColors[0], dadColors[1], dadColors[2]));
 
       case 2: // Girlfriend (focus on girlfriend)
         if (currentStage.getGirlfriend() == null)

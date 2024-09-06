@@ -319,6 +319,25 @@ class Preferences
   }
 
   /**
+   * Whether to properly center the strums
+   * @default `false`
+   */
+  public static var centerStrums(get, set):Bool;
+
+  static function get_centerStrums():Bool
+  {
+    return Save?.instance?.options?.centerStrums ?? true;
+  }
+
+  static function set_centerStrums(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.centerStrums = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * transparency of lanes
    * @default `0.6`
    */

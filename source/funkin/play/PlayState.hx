@@ -500,6 +500,11 @@ class PlayState extends MusicBeatSubState
   public var timeBar:TimeBar;
 
   /**
+   * Makes the Time Bar Color not change on camera focus.
+   */
+  public var blockTimeBarColorChange:Bool = false;
+
+  /**
    * The background image used for the health bar.
    * Emma says the image is slightly skewed so I'm leaving it as an image instead of a `createGraphic`.
    */
@@ -955,6 +960,8 @@ class PlayState extends MusicBeatSubState
       ratingFC = '? (';
       ratingPercent = 0;
       totalPlayed = 0;
+      timeBar.alpha = 0;
+      timeText.alpha = 0;
       Countdown.performCountdown(currentStageId.startsWith('school'));
 
       needsReset = false;
@@ -1694,6 +1701,7 @@ class PlayState extends MusicBeatSubState
     timeBar.zIndex = 803;
     timeBar.screenCenter(X);
     if (dad.healthBarColor.length == 3) timeBar.setColors(red);
+    timeBar.alpha = 0;
     add(timeBar);
 
     /*var testBar = new TimeBar(0, 300, 'fakeImg', function() return songPercent, 0, 1);
@@ -1711,6 +1719,7 @@ class PlayState extends MusicBeatSubState
     timeText.zIndex = 804;
     timeText.screenCenter(X);
     timeText.y = 25;
+    timeText.alpha = 0;
     add(timeText);
     if (!Preferences.timer) timeText.visible = false;
 
@@ -1916,8 +1925,9 @@ class PlayState extends MusicBeatSubState
     add(opponentStrumline);
 
     // Position the player strumline on the right half of the screen
-    playerStrumline.x = FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET; // Classic style
-    // playerStrumline.x = FlxG.width - playerStrumline.width - Constants.STRUMLINE_X_OFFSET; // Centered style
+    playerStrumline.x = !Preferences.centerStrums ? FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET : playerStrumline.x = FlxG.width - playerStrumline.width
+      - Constants.STRUMLINE_X_OFFSET; // Classic style
+    // playerStrumline.x = FlxG.width - playerStrumline.width - Constants.STRUMLINE_X_OFFSET; // Centered style //Thanks bro this makes it real fuckin easy.
     playerStrumline.y = Preferences.downscroll ? FlxG.height - playerStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
     playerStrumline.zIndex = 1001;
     playerStrumline.cameras = [camHUD];
@@ -2149,6 +2159,8 @@ class PlayState extends MusicBeatSubState
      */
   function startSong():Void
   {
+    FlxTween.tween(timeBar, {alpha: 1}, 1);
+    FlxTween.tween(timeText, {alpha: 1}, 1); // fix for incorrect shit lmao
     startingSong = false;
 
     if (!overrideMusic && !isGamePaused && currentChart != null)
