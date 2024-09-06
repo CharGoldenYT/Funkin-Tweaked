@@ -99,7 +99,10 @@ class FocusCameraSongEvent extends SongEvent
         var bfColors = currentStage.getBoyfriend().healthBarColor;
         targetX += bfPoint.x;
         targetY += bfPoint.y;
-        if (!PlayState.instance.blockTimeBarColorChange) PlayState.instance.timeBar.setColors(FlxColor.fromRGB(bfColors[0], bfColors[1], bfColors[2]));
+        if (!PlayState.instance.blockTimeBarColorChange && bfColors.length == 3)
+        {
+          PlayState.instance.timeBar.setColors(FlxColor.fromRGB(bfColors[0], bfColors[1], bfColors[2]));
+        }
 
       case 1: // Dad (focus on opponent)
         if (currentStage.getDad() == null)
@@ -112,7 +115,10 @@ class FocusCameraSongEvent extends SongEvent
         var dadColors = currentStage.getDad().healthBarColor;
         targetX += dadPoint.x;
         targetY += dadPoint.y;
-        if (!PlayState.instance.blockTimeBarColorChange) PlayState.instance.timeBar.setColors(FlxColor.fromRGB(dadColors[0], dadColors[1], dadColors[2]));
+        if (!PlayState.instance.blockTimeBarColorChange && dadColors.length == 3)
+        {
+          PlayState.instance.timeBar.setColors(FlxColor.fromRGB(dadColors[0], dadColors[1], dadColors[2]));
+        }
 
       case 2: // Girlfriend (focus on girlfriend)
         if (currentStage.getGirlfriend() == null)
