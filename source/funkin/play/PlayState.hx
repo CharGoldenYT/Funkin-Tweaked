@@ -41,6 +41,7 @@ import funkin.play.character.CharacterData.CharacterDataParser;
 import funkin.play.components.ComboMilestone;
 import funkin.play.components.HealthIcon;
 import funkin.play.components.PopUpStuff;
+import funkin.play.components.TimeBar;
 import funkin.play.cutscene.dialogue.Conversation;
 import funkin.play.cutscene.VanillaCutscenes;
 import funkin.play.cutscene.VideoCutscene;
@@ -496,7 +497,7 @@ class PlayState extends MusicBeatSubState
   /**
    * The bar which displays time remaining.
    */
-  public var timeBar:FlxBar;
+  public var timeBar:TimeBar;
 
   /**
    * The background image used for the health bar.
@@ -1688,21 +1689,28 @@ class PlayState extends MusicBeatSubState
     scoreText.zIndex = 802;
     add(scoreText);
 
-    // A timer that shows remaining time pretty simple
-    timeBar = new FlxBar(0, 20, LEFT_TO_RIGHT, Std.int(healthBarBG.width / 2), Std.int(healthBarBG.height * 1.25), this, "songPercent", 0, 1);
+    timeBar = new TimeBar(0, 20, 'timeBar', function() return songPercent, 0, 1);
     timeBar.scrollFactor.set();
-    timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF, true, 0xFF000000);
     timeBar.zIndex = 803;
     timeBar.screenCenter(X);
+    if (dad.healthBarColor.length == 3) timeBar.setColors(red);
     add(timeBar);
-    if (!Preferences.timer) timeBar.visible = false;
+
+    /*var testBar = new TimeBar(0, 300, 'fakeImg', function() return songPercent, 0, 1);
+        // this was a test of whether my backup shit works! and it did! after much troubleshooting...
+            testBar.scrollFactor.set();
+            testBar.zIndex = 803;
+            testBar.screenCenter(X);
+            if (dad.healthBarColor.length == 3) testBar.setColors(red);
+            add(testBar); */
 
     // The text that tells you how long till the song is over.
-    timeText = new FlxText(0, 17, timeBar.width, "", 30);
-    timeText.setFormat(Paths.font('vcr.ttf'), 30, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    timeText = new FlxText(0, 0, timeBar.width, "", 25);
+    timeText.setFormat(Paths.font('vcr.ttf'), 25, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
     timeText.scrollFactor.set();
     timeText.zIndex = 804;
     timeText.screenCenter(X);
+    timeText.y = 25;
     add(timeText);
     if (!Preferences.timer) timeText.visible = false;
 
@@ -1712,6 +1720,7 @@ class PlayState extends MusicBeatSubState
     scoreText.cameras = [camHUD];
     timeBar.cameras = [camHUD];
     timeText.cameras = [camHUD];
+    // testBar.cameras = [camHUD];
   }
 
   /**

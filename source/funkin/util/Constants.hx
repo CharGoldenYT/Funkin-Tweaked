@@ -58,7 +58,7 @@ class Constants
   /**
    * The Version of Funkin' Tweaked
    */
-  public static final TWEAKED_VERSION:String = '0.7 - Beta';
+  public static final TWEAKED_VERSION:String = '0.7 - Beta 2';
 
   /**
    * URL DATA

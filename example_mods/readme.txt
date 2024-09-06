@@ -32,7 +32,7 @@ Ratings:
 	"ratingPercent" The Float that represents how good you're playing (AKA Accuracy)
 
 Time Bar:
-	"timeBar" FlxBar that displays how much time is left.
+	"timeBar" Bar (see psych's bar.hx https://github.com/ShadowMario/FNF-PsychEngine/blob/main/source/objects/Bar.hx) that displays how much time is left.
 	"timePercent" How much from 0 to one is left on the timer
 	"songLength" How much time until the bar is full in milliseconds basically (Float used in calculations for the Song Time Text).
 
