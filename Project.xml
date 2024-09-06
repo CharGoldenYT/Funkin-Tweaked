@@ -88,8 +88,8 @@ xsi:schemaLocation="http://lime.openfl.org/project/1.0.4 http://lime.openfl.org/
 	<assets path="assets/weekend1" library="weekend1" exclude="*.fla|*.ogg|*.wav" if="web" />
 	<assets path="assets/weekend1" library="weekend1" exclude="*.fla|*.mp3|*.wav" unless="web" />
 	<assets path='example_mods/noteSkinTest' rename='mods/noteSkinTest'/>
-	<!-- the next 2 lines are specifically meant to be used when exporting for GameBanana, save to delete! -->
 	<assets path='example_mods/tweakedCredits' rename='export/mods/tweakedCredits'/>
+	<!-- the next 2 lines are specifically meant to be used when exporting for GameBanana, safe to delete! -->
 	<assets path='example_mods/readme.txt' rename='export/IMPORTANT README.txt'/>
 	<!--
 		AUTOMATICALLY MOVING EXAMPLE MODS INTO THE BUILD CAUSES ISSUES
