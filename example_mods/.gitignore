@@ -1,7 +1,6 @@
 # Exclude any experimental mods that my have been added.
 /*
-!introMod
-!testing123
+!unused
 !tweakedAssets
 !noteSkinTest
 !readme.txt
