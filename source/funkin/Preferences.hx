@@ -360,6 +360,25 @@ class Preferences
   }
 
   /**
+   * Whether to properly fix the score text being partially blocked by icons
+   * @default `false`
+   */
+  public static var fixScoreOffset(get, set):Bool;
+
+  static function get_fixScoreOffset():Bool
+  {
+    return Save?.instance?.options?.fixScoreOffset ?? true;
+  }
+
+  static function set_fixScoreOffset(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.fixScoreOffset = value;
+    save.flush();
+    return value;
+  }
+
+  /**
    * transparency of lanes
    * @default `0.6`
    */

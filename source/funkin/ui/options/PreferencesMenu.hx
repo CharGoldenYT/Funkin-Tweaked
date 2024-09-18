@@ -115,7 +115,7 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Ghost Tapping', 'Whether to allow you to tap when theres no note without penalty.', function(value:Bool):Void {
       Preferences.ghostTapping = value;
     }, Preferences.ghostTapping);
-    createPrefItemCheckbox('Show Timings', '(NOT IMPLEMENTED!) Shows when you hit a note below the rating', function(value:Bool):Void {
+    createPrefItemCheckbox('Show Timings', 'Shows when you hit a note below the rating', function(value:Bool):Void {
       Preferences.showTimings = value;
     }, Preferences.showTimings);
     createPrefItemCheckbox('Transparent Strum Line', '(NOT IMPLEMENTED!) Makes the Strum Line transparent', function(value:Bool):Void {
@@ -152,6 +152,10 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Ghost Tap Anims', '(NOT IMPLEMENTED!) Whether to show sing animations on ghost tap', function(value:Bool):Void {
       Preferences.animsGhostTap = value;
     }, Preferences.animsGhostTap); // Later.
+    createPrefItemCheckbox('Fix Score Offset', '(NOT IMPLEMENTED!) Whether to properly fix the score text being partially blocked by icons',
+      function(value:Bool):Void {
+        Preferences.fixScoreOffset = value;
+      }, Preferences.fixScoreOffset);
   }
 
   override function update(elapsed:Float):Void

@@ -400,6 +400,7 @@ class CharacterDataParser
   public static final DEFAULT_SCALE:Float = 1;
   public static final DEFAULT_SCROLL:Array<Float> = [0, 0];
   public static final DEFAULT_STARTINGANIM:String = 'idle';
+  public static final DEFAULT_HEALTHBARCOLOR:Array<Int> = [255];
 
   /**
    * Set unspecified parameters to their defaults.
@@ -485,6 +486,12 @@ class CharacterDataParser
     if (input.healthIcon.offsets == null)
     {
       input.healthIcon.offsets = DEFAULT_OFFSETS;
+    }
+
+    if (input.healthBarColor == null)
+    {
+      trace('HEALTHBARCOLOR NULL FOR $id USING DEFAULT RED/GREEN');
+      input.healthBarColor = DEFAULT_HEALTHBARCOLOR;
     }
 
     if (input.startingAnimation == null)
@@ -684,6 +691,14 @@ typedef CharacterData =
    * @default 1.0
    */
   var singTime:Null<Float>;
+
+  /**
+   * The way the healthbar gets colored, using an Array of Int's
+   *
+   * example boyfriends is:
+   *  @default [49, 176, 209]
+   */
+  var healthBarColor:Array<Int>;
 
   /**
    * An optional array of animations which the character can play.

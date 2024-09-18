@@ -108,6 +108,7 @@ class Save
           strumTransparency: 0.5,
           animsGhostTap: true,
           centerStrums: false,
+          fixScoreOffset: false,
           inputOffset: 0,
           audioVisualOffset: 0,
           unlockedFramerate: false,
@@ -1269,6 +1270,11 @@ typedef SaveDataOptions =
    * Whether to properly center the strums
    */
   var centerStrums:Bool;
+
+  /**
+   * Whether to properly fix the score text being partially blocked by icons
+   */
+  var fixScoreOffset:Bool;
 
   var controls:
     {

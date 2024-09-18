@@ -17,6 +17,7 @@ class BaseCharacter extends Bopper
   // Metadata about a character.
   public var characterId(default, null):String;
   public var characterName(default, null):String;
+  public var healthBarColor:Array<Int>;
 
   /**
    * Whether the player is an active character (Boyfriend) or not.
@@ -170,6 +171,7 @@ class BaseCharacter extends Bopper
       this.singTimeSteps = _data.singTime;
       this.globalOffsets = _data.offsets;
       this.flipX = _data.flipX;
+      this.healthBarColor = _data.healthBarColor;
     }
 
     shouldBop = false;
@@ -202,6 +204,11 @@ class BaseCharacter extends Bopper
   public function getDataFlipX():Bool
   {
     return _data.flipX;
+  }
+
+  public function getHealthBarColor():Array<Int>
+  {
+    return _data.healthBarColor;
   }
 
   function findCountAnimations(prefix:String):Array<Int>

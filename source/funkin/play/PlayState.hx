@@ -457,6 +457,11 @@ class PlayState extends MusicBeatSubState
    * RENDER OBJECTS
    */
   /**
+   * The FlxText that shows last note's hit time
+   */
+  public var hitTime:FlxText;
+
+  /**
    * The FlxText which displays the current score.
    */
   var scoreText:FlxText;
@@ -1499,11 +1504,36 @@ class PlayState extends MusicBeatSubState
     add(cameraFollowPoint);
   }
 
+  public var red = Constants.COLOR_HEALTH_BAR_RED;
+  public var green = Constants.COLOR_HEALTH_BAR_GREEN;
+
   /**
      * Initializes the health bar on the HUD.
      */
   function initHealthBar():Void
   {
+    // Text that shows last hit time
+    hitTime = new FlxText(0, 0, 0, "", 24);
+    hitTime.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
+    hitTime.cameras = [camHUD];
+    hitTime.screenCenter();
+    hitTime.alpha = 0;
+    hitTime.zIndex = 805;
+    add(hitTime);
+    // Load the character data to get health bar color!
+    var currentCharacterDataa:SongCharacterData = currentChart.characters;
+    var bf:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.player);
+    var dad:BaseCharacter = CharacterDataParser.fetchCharacter(currentCharacterDataa.opponent);
+    if (bf.healthBarColor.length == 3)
+    {
+      // var array:Array<Int> = bf.getHealthBarColor();
+      green = FlxColor.fromRGB(bf.getHealthBarColor()[0], bf.getHealthBarColor()[1], bf.getHealthBarColor()[2]);
+    }
+    if (dad.healthBarColor.length == 3)
+    {
+      // var array:Array<Int> = dad.getHealthBarColor();
+      red = FlxColor.fromRGB(dad.getHealthBarColor()[0], dad.getHealthBarColor()[1], dad.getHealthBarColor()[2]);
+    }
     var healthBarYPos:Float = Preferences.downscroll ? FlxG.height * 0.1 : FlxG.height * 0.9;
     healthBarBG = FunkinSprite.create(0, healthBarYPos, 'healthBar');
     healthBarBG.screenCenter(X);
@@ -1514,7 +1544,7 @@ class PlayState extends MusicBeatSubState
     healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
       'healthLerp', 0, 2);
     healthBar.scrollFactor.set();
-    healthBar.createFilledBar(Constants.COLOR_HEALTH_BAR_RED, Constants.COLOR_HEALTH_BAR_GREEN);
+    healthBar.createFilledBar(red, green);
     healthBar.zIndex = 801;
     add(healthBar);
 
@@ -2427,6 +2457,8 @@ class PlayState extends MusicBeatSubState
     }
   }
 
+  var latencyTween:FlxTween;
+
   function goodNoteHit(note:NoteSprite, input:PreciseInputEvent):Void
   {
     // Calculate the input latency (do this as late as possible).
@@ -2438,9 +2470,18 @@ class PlayState extends MusicBeatSubState
     // Get the offset and compensate for input latency.
     // Round inward (trim remainder) for consistency.
     var noteDiff:Int = Std.int(Conductor.instance.songPosition - note.noteData.time - inputLatencyMs);
-
+    var latency:Float = (Conductor.instance.songPosition - note.noteData.time - inputLatencyMs);
     var score = Scoring.scoreNote(noteDiff, PBOT1);
     var daRating = Scoring.judgeNote(noteDiff, PBOT1);
+    if (Preferences.showTimings)
+    {
+      var latencyRound = FlxMath.roundDecimal(latency, 2);
+      hitTime.text = '$latencyRound(Ms)';
+      hitTime.alpha = 1;
+      hitTime.screenCenter(X);
+      if (latencyTween != null) latencyTween.cancel();
+      latencyTween = FlxTween.tween(hitTime, {alpha: 0}, 1);
+    }
 
     var healthChange = 0.0;
     var isComboBreak = false;
@@ -2666,14 +2707,24 @@ class PlayState extends MusicBeatSubState
     {
       case 'sick':
         Highscore.tallies.sick += 1;
+        if (currentStage.id != 'limoRideErect' || currentStage.id != 'spookyMansionErect') hitTime.color = 0xFF00FF00;
+        if (currentStage.id == 'limoRideErect' || currentStage.id == 'spookyMansionErect') hitTime.color = 0xFFFFFFFF;
       case 'good':
         Highscore.tallies.good += 1;
+        if (currentStage.id != 'limoRideErect' || currentStage.id != 'spookyMansionErect') hitTime.color = 0xFF227E22;
+        if (currentStage.id == 'limoRideErect' || currentStage.id == 'spookyMansionErect') hitTime.color = 0xFFC9C9C9;
       case 'bad':
         Highscore.tallies.bad += 1;
+        if (currentStage.id != 'limoRideErect' || currentStage.id != 'spookyMansionErect') hitTime.color = 0xFFFF0000;
+        if (currentStage.id == 'limoRideErect' || currentStage.id == 'spookyMansionErect') hitTime.color = 0xFF8D8D8D;
       case 'shit':
         Highscore.tallies.shit += 1;
+        if (currentStage.id != 'limoRideErect' || currentStage.id != 'spookyMansionErect') hitTime.color = 0xFF741F1F;
+        if (currentStage.id == 'limoRideErect' || currentStage.id == 'spookyMansionErect') hitTime.color = 0xFF3D3838;
       case 'miss':
         Highscore.tallies.missed += 1;
+        if (currentStage.id != 'limoRideErect' || currentStage.id != 'spookyMansionErect') hitTime.color = 0xFF741F1F;
+        if (currentStage.id == 'limoRideErect' || currentStage.id == 'spookyMansionErect') hitTime.color = 0xFF3D3838;
     }
     health += healthChange;
     if (isComboBreak)
