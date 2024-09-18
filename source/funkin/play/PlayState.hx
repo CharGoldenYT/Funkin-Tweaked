@@ -626,6 +626,9 @@ class PlayState extends MusicBeatSubState
     playbackRate = params.playbackRate ?? 1.0;
     overrideMusic = params.overrideMusic ?? false;
     previousCameraFollowPoint = params.cameraFollowPoint;
+    Constants.GHOST_TAPPING = Preferences.ghostTapping;
+    Constants.JUDGEMENT_BAD_COMBO_BREAK = Preferences.badsShitsCauseMiss;
+    Constants.JUDGEMENT_SHIT_COMBO_BREAK = Preferences.badsShitsCauseMiss;
 
     // Don't do anything else here! Wait until create() when we attach to the camera.
   }
@@ -1137,7 +1140,7 @@ class PlayState extends MusicBeatSubState
 
       if (songEventsToActivate.length > 0)
       {
-        trace('Found ${songEventsToActivate.length} event(s) to activate.');
+        // trace('Found ${songEventsToActivate.length} event(s) to activate.');
         for (event in songEventsToActivate)
         {
           // If an event is trying to play, but it's over 1 second old, skip it.
@@ -2004,21 +2007,50 @@ class PlayState extends MusicBeatSubState
     vocals.play(false, timeToPlayAt);
   }
 
+  var missTally:Int;
+
   /**
      * Updates the position and contents of the score display.
      */
   function updateScoreText():Void
   {
     // TODO: Add functionality for modules to update the score text.
-    if (isBotPlayMode)
+    if (Preferences.extraScoreInfo)
     {
-      scoreText.text = 'Bot Play Enabled';
+      missTally = Preferences.badsShitsCauseMiss ? Highscore.tallies.missed + Highscore.tallies.bad + Highscore.tallies.shit : Highscore.tallies.missed;
+      if (isBotPlayMode)
+      {
+        scoreText.text = 'Bot Play Enabled | Misses: '
+          + missTally
+          + ' | Combo: '
+          + Highscore.tallies.combo
+          + ' | Accuracy: ? (Not Implemented yet.)';
+      }
+      else
+      {
+        // TODO: Add an option for this maybe?
+        var commaSeparated:Bool = true;
+        scoreText.text = 'Score: ${FlxStringUtil.formatMoney(songScore, false, commaSeparated)} | Misses: '
+          + missTally
+          + ' | Combo: '
+          + Highscore.tallies.combo
+          + ' | Accuracy: ? (Not Implemented yet.)';
+        scoreText.screenCenter(X);
+      }
     }
     else
     {
-      // TODO: Add an option for this maybe?
-      var commaSeparated:Bool = true;
-      scoreText.text = 'Score: ${FlxStringUtil.formatMoney(songScore, false, commaSeparated)}';
+      if (isBotPlayMode)
+      {
+        scoreText.text = 'Bot Play Enabled';
+      }
+      else
+      {
+        // TODO: Add an option for this maybe?
+        var commaSeparated:Bool = true;
+        scoreText.text = 'Score: ${FlxStringUtil.formatMoney(songScore, false, commaSeparated)}';
+        scoreText.screenCenter(X);
+      }
     }
   }
 
@@ -2239,7 +2271,7 @@ class PlayState extends MusicBeatSubState
         {
           // Judge the miss.
           // NOTE: This is what handles the scoring.
-          trace('Missed note! ${note.noteData}');
+          // trace('Missed note! ${note.noteData}');
           onNoteMiss(note, event.playSound, event.healthChange);
         }
 
@@ -2346,7 +2378,7 @@ class PlayState extends MusicBeatSubState
       #if FEATURE_GHOST_TAPPING
       if ((!playerStrumline.mayGhostTap()) && notesInDirection.length == 0)
       #else
-      if (notesInDirection.length == 0)
+      if (!Constants.GHOST_TAPPING && notesInDirection.length == 0)
       #end
       {
         // Pressed a wrong key with no notes nearby.
@@ -2355,7 +2387,7 @@ class PlayState extends MusicBeatSubState
 
         // Play the strumline animation.
         playerStrumline.playPress(input.noteDirection);
-        trace('PENALTY Score: ${songScore}');
+        // trace('PENALTY Score: ${songScore}');
       }
     else if (notesInDirection.length == 0)
     {
@@ -2363,7 +2395,7 @@ class PlayState extends MusicBeatSubState
 
       // Play the strumline animation.
       playerStrumline.playPress(input.noteDirection);
-      trace('NO PENALTY Score: ${songScore}');
+      // trace('NO PENALTY Score: ${songScore}');
     }
     else
     {
@@ -2373,9 +2405,9 @@ class PlayState extends MusicBeatSubState
       if (targetNote == null) continue;
 
       // Judge and hit the note.
-      trace('Hit note! ${targetNote.noteData}');
+      // trace('Hit note! ${targetNote.noteData}');
       goodNoteHit(targetNote, input);
-      trace('Score: ${songScore}');
+      // trace('Score: ${songScore}');
 
       notesInDirection.remove(targetNote);
 

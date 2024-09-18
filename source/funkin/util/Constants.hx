@@ -19,7 +19,7 @@ class Constants
    * The title of the game, for debug printing purposes.
    * Change this if you're making an engine.
    */
-  public static final TITLE:String = "Friday Night Funkin'";
+  public static final TITLE:String = "Friday Night Funkin': Tweaked ReCoded";
 
   /**
    * The current version number of the game.
@@ -478,8 +478,8 @@ class Constants
   public static final JUDGEMENT_KILLER_COMBO_BREAK:Bool = false;
   public static final JUDGEMENT_SICK_COMBO_BREAK:Bool = false;
   public static final JUDGEMENT_GOOD_COMBO_BREAK:Bool = false;
-  public static final JUDGEMENT_BAD_COMBO_BREAK:Bool = true;
-  public static final JUDGEMENT_SHIT_COMBO_BREAK:Bool = true;
+  public static var JUDGEMENT_BAD_COMBO_BREAK:Bool = true;
+  public static var JUDGEMENT_SHIT_COMBO_BREAK:Bool = true;
 
   // % Sick
   public static final RANK_PERFECT_PLAT_THRESHOLD:Float = 1.0; // % Sick
@@ -539,6 +539,12 @@ class Constants
    */
   public static final GHOST_TAP_DELAY:Float = 3 / 8;
   #end
+
+  /**
+   * Basically, this is because of how Tweaked was originally coded and shit.
+   * In the sense that, it's always active if the preference is set to true.
+   */
+  public static var GHOST_TAPPING:Bool = false;
 
   /**
    * The maximum number of previous file paths for the Chart Editor to remember.

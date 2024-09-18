@@ -42,7 +42,7 @@ class NumberPreferenceItem extends TextMenuItem
    * @param valueFormatter Will get called every time the game needs to display the float value; use this to change how the displayed string looks
    */
   public function new(x:Float, y:Float, name:String, defaultValue:Float, min:Float, max:Float, step:Float, precision:Int, ?callback:Float->Void,
-      ?valueFormatter:Float->String):Void
+      ?valueFormatter:Float->String, ?desc:String):Void
   {
     super(x, y, name, function() {
       callback(this.currentValue);
@@ -58,6 +58,7 @@ class NumberPreferenceItem extends TextMenuItem
     this.precision = precision;
     this.onChangeCallback = callback;
     this.valueFormatter = valueFormatter;
+    this.textDesc = desc;
   }
 
   override function update(elapsed:Float):Void

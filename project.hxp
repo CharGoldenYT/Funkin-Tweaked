@@ -30,7 +30,7 @@ class Project extends HXProject {
 	/**
 	 * The game's name. Used as the default window title.
 	 */
-	static final TITLE:String = "Friday Night Funkin'";
+	static final TITLE:String = "Friday Night Funkin': Tweaked ReCoded";
 
 	/**
 	 * The name of the generated executable file.
@@ -441,7 +441,7 @@ class Project extends HXProject {
 		GITHUB_BUILD.apply(this, false);
 		FEATURE_STAGE_EDITOR.apply(this, false);
 		FEATURE_NEWGROUNDS.apply(this, false);
-		FEATURE_GHOST_TAPPING.apply(this, false);
+		FEATURE_GHOST_TAPPING.apply(this, false); // Yummy ghost tapping - Char
 
 		// Should be true unless explicitly requested.
 		HARDCODED_CREDITS.apply(this, true);

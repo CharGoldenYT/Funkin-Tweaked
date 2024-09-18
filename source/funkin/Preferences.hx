@@ -150,6 +150,257 @@ class Preferences
     return value;
   }
 
+  /**
+   * If enabled, Bads and Shits cause a miss.
+   * @default `true`
+   */
+  public static var badsShitsCauseMiss(get, set):Bool;
+
+  static function get_badsShitsCauseMiss():Bool
+  {
+    return Save?.instance?.options?.badsShitsCauseMiss ?? true;
+  }
+
+  static function set_badsShitsCauseMiss(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.badsShitsCauseMiss = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, Shows extra info on the score line, like combo and combo breaks/misses
+   * @default `true`
+   */
+  public static var extraScoreInfo(get, set):Bool;
+
+  static function get_extraScoreInfo():Bool
+  {
+    return Save?.instance?.options?.extraScoreInfo ?? true;
+  }
+
+  static function set_extraScoreInfo(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.extraScoreInfo = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, lets you press when there are no arrows without causing a miss.
+   * @default `true`
+   */
+  public static var ghostTapping(get, set):Bool;
+
+  static function get_ghostTapping():Bool
+  {
+    return Save?.instance?.options?.ghostTapping ?? true;
+  }
+
+  static function set_ghostTapping(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.ghostTapping = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * If enabled, shows when you hit a note
+   * @default `true`
+   */
+  public static var showTimings(get, set):Bool;
+
+  static function get_showTimings():Bool
+  {
+    return Save?.instance?.options?.showTimings ?? true;
+  }
+
+  static function set_showTimings(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.showTimings = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Enhancement suggestion from "https://github.com/FunkinCrew/Funkin/issues/3124"
+   * @default `false`
+   */
+  public static var transparentStrumline(get, set):Bool;
+
+  static function get_transparentStrumline():Bool
+  {
+    return Save?.instance?.options?.transparentStrumline ?? true;
+  }
+
+  static function set_transparentStrumline(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.transparentStrumline = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Does a better job at actually calculating accuracy, but isn't accurate to the results screen
+   * @default `false`
+   */
+  public static var complexAccuracy(get, set):Bool;
+
+  static function get_complexAccuracy():Bool
+  {
+    return Save?.instance?.options?.complexAccuracy ?? true;
+  }
+
+  static function set_complexAccuracy(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.complexAccuracy = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Whether to show the time left in a song
+   * @default `true`
+   */
+  public static var timer(get, set):Bool;
+
+  static function get_timer():Bool
+  {
+    return Save?.instance?.options?.timer ?? true;
+  }
+
+  static function set_timer(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.timer = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Whether to show not lanes
+   * @default `false`
+   */
+  public static var lanes(get, set):Bool;
+
+  static function get_lanes():Bool
+  {
+    return Save?.instance?.options?.lanes ?? true;
+  }
+
+  static function set_lanes(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.lanes = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Whether to show not lanes
+   * @default `false`
+   */
+  public static var animsGhostTap(get, set):Bool;
+
+  static function get_animsGhostTap():Bool
+  {
+    return Save?.instance?.options?.animsGhostTap ?? true;
+  }
+
+  static function set_animsGhostTap(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.animsGhostTap = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Whether to show opponent lanes
+   * @default `true`
+   */
+  public static var oppLanes(get, set):Bool;
+
+  static function get_oppLanes():Bool
+  {
+    return Save?.instance?.options?.oppLanes ?? true;
+  }
+
+  static function set_oppLanes(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.oppLanes = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * Whether to properly center the strums
+   * @default `false`
+   */
+  public static var centerStrums(get, set):Bool;
+
+  static function get_centerStrums():Bool
+  {
+    return Save?.instance?.options?.centerStrums ?? true;
+  }
+
+  static function set_centerStrums(value:Bool):Bool
+  {
+    var save:Save = Save.instance;
+    save.options.centerStrums = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * transparency of lanes
+   * @default `0.6`
+   */
+  public static var laneTransparency(get, set):Float;
+
+  static function get_laneTransparency():Float
+  {
+    var save:Save = Save.instance;
+    var float:Float = save.options.laneTransparency;
+    return float;
+  }
+
+  static function set_laneTransparency(value:Float):Float
+  {
+    var save:Save = Save.instance;
+    save.options.laneTransparency = value;
+    save.flush();
+    return value;
+  }
+
+  /**
+   * transparency of lanes
+   * @default `0.6`
+   */
+  public static var strumTransparency(get, set):Float;
+
+  static function get_strumTransparency():Float
+  {
+    var save:Save = Save.instance;
+    var float:Float = save.options.strumTransparency;
+    return float;
+  }
+
+  static function set_strumTransparency(value:Float):Float
+  {
+    var save:Save = Save.instance;
+    save.options.strumTransparency = value;
+    save.flush();
+    return value;
+  }
+
   #if web
   // We create a haxe version of this just for readability.
   // We use these to override `window.requestAnimationFrame` in Javascript to uncap the framerate / "animation" request rate

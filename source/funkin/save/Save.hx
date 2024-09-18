@@ -95,6 +95,19 @@ class Save
           zoomCamera: true,
           debugDisplay: false,
           autoPause: true,
+          badsShitsCauseMiss: true,
+          extraScoreInfo: true,
+          ghostTapping: true,
+          showTimings: true,
+          transparentStrumline: false,
+          complexAccuracy: false,
+          timer: true,
+          lanes: false,
+          oppLanes: true,
+          laneTransparency: 0.6,
+          strumTransparency: 0.5,
+          animsGhostTap: true,
+          centerStrums: false,
           inputOffset: 0,
           audioVisualOffset: 0,
           unlockedFramerate: false,
@@ -1186,6 +1199,76 @@ typedef SaveDataOptions =
    * @default `false
    */
   var unlockedFramerate:Bool;
+
+  /**
+   * Toggles Whether Bads/Shits Cause missing.
+   * @default `true`
+   */
+  var badsShitsCauseMiss:Bool;
+
+  /**
+   * Shows Info like current combo current Combo Breaks/Misses
+   * @default `true`
+   */
+  var extraScoreInfo:Bool;
+
+  /**
+   * Enables the ability to press where arrows arent, and not cause misses
+   * @default `true`
+   */
+  var ghostTapping:Bool;
+
+  /**
+   * If enabled, shows when you hit a note
+   * @default `true`
+   */
+  var showTimings:Bool;
+
+  /**
+   * Enhancement suggestion from "https://github.com/FunkinCrew/Funkin/issues/3124"
+   * @default `true`
+   */
+  var transparentStrumline:Bool;
+
+  /**
+   *  Does a better job at actually calculating accuracy, but isn't accurate to the results screen
+   */
+  var complexAccuracy:Bool;
+
+  /**
+   * Whether to show the time remaining in a song.
+   */
+  var timer:Bool;
+
+  /**
+   * Whether to show lanes under your notes
+   */
+  var lanes:Bool;
+
+  /**
+   * Whether to show lanes under opponent notes
+   */
+  var oppLanes:Bool;
+
+  /**
+   * How transparent you want your lanes to be
+   */
+  var laneTransparency:Float;
+
+  /**
+   * How transparent you want your strums to be.
+   */
+  var strumTransparency:Float;
+
+  /**
+   * Whether to show sing anims on ghost tap
+   */
+  var animsGhostTap:Bool;
+
+  /**
+   * Whether to properly center the strums
+   */
+  var centerStrums:Bool;
 
   var controls:
     {
