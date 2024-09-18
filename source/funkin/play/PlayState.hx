@@ -67,9 +67,6 @@ import lime.ui.Haptic;
 import openfl.display.BitmapData;
 import openfl.geom.Rectangle;
 import openfl.Lib;
-#if FEATURE_DISCORD_RPC
-import Discord.DiscordClient;
-#end
 
 /**
  * Parameters used to initialize the PlayState.
@@ -210,6 +207,33 @@ class PlayState extends MusicBeatSubState
    * TODO: Move this to its own class.
    */
   public var songScore:Int = 0;
+
+  /**
+   * Total song played including misses
+   */
+  public var totalPlayed:Int = 0;
+
+  /**
+   * The accuracy calculated based on notesHit / totalPlayed
+   */
+  public var ratingPercent:Float = 0;
+
+  /**
+   * What shows on the score text
+   */
+  public var ratingFC:String = '? (';
+
+  /**
+   * Array of what to show on the scoreText.
+   */
+  public final ratingStuff:Array<String> = [
+    '? (',
+    'Clear (',
+    'Shit... (SDCB, ',
+    'Meh. (FC, ',
+    'Good! (GFC, ',
+    'SICK! (SFC, '
+  ];
 
   /**
    * Start at this point in the song once the countdown is done.
@@ -911,6 +935,9 @@ class PlayState extends MusicBeatSubState
       health = Constants.HEALTH_STARTING;
       songScore = 0;
       Highscore.tallies.combo = 0;
+      ratingFC = '? (';
+      ratingPercent = 0;
+      totalPlayed = 0;
       Countdown.performCountdown();
 
       needsReset = false;
@@ -1506,12 +1533,31 @@ class PlayState extends MusicBeatSubState
 
   public var red = Constants.COLOR_HEALTH_BAR_RED;
   public var green = Constants.COLOR_HEALTH_BAR_GREEN;
+  public var notLane /**lmao**/:FlxSprite; // this is in a weird place ik but fuck you.
+  public var notLane2 /**lmao**/:FlxSprite;
 
   /**
      * Initializes the health bar on the HUD.
      */
   function initHealthBar():Void
   {
+    // Lanes that go under the HUD, which is why its at the beginning.
+    // Player Note Lane
+    notLane = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
+    notLane.alpha = Preferences.laneTransparency;
+    notLane.zIndex = 798;
+    notLane.cameras = [camHUD];
+    notLane.visible = Preferences.lanes;
+    add(notLane);
+
+    // Opponent Note Lane
+    notLane2 = new FlxSprite().makeGraphic(448, FlxG.height, FlxColor.BLACK);
+    notLane2.alpha = Preferences.laneTransparency;
+    notLane2.zIndex = 799;
+    notLane2.cameras = [camHUD];
+    notLane2.visible = Preferences.lanes;
+    add(notLane2);
+
     // Text that shows last hit time
     hitTime = new FlxText(0, 0, 0, "", 24);
     hitTime.setFormat(Paths.font('vcr.ttf'), 24, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -1755,7 +1801,7 @@ class PlayState extends MusicBeatSubState
 
     // Position the player strumline on the right half of the screen
     playerStrumline.x = FlxG.width / 2 + Constants.STRUMLINE_X_OFFSET; // Classic style
-    // playerStrumline.x = FlxG.width - playerStrumline.width - Constants.STRUMLINE_X_OFFSET; // Centered style
+    if (Preferences.centerStrums) playerStrumline.x = FlxG.width - playerStrumline.width - Constants.STRUMLINE_X_OFFSET; // Centered style
     playerStrumline.y = Preferences.downscroll ? FlxG.height - playerStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
     playerStrumline.zIndex = 1001;
     playerStrumline.cameras = [camHUD];
@@ -1765,6 +1811,25 @@ class PlayState extends MusicBeatSubState
     opponentStrumline.y = Preferences.downscroll ? FlxG.height - opponentStrumline.height - Constants.STRUMLINE_Y_OFFSET : Constants.STRUMLINE_Y_OFFSET;
     opponentStrumline.zIndex = 1000;
     opponentStrumline.cameras = [camHUD];
+    notLane.x = playerStrumline.x;
+    notLane2.x = opponentStrumline.x;
+
+    if (Preferences.lanes && Preferences.oppLanes)
+    {
+      if (!opponentStrumline.visible || currentSong.id == 'blazin')
+      {
+        notLane2.visible = false;
+        if (currentSong.id == 'blazin') notLane.screenCenter(X);
+      }
+      else
+      {
+        notLane2.visible = true;
+      }
+    }
+    else
+    {
+      notLane2.visible = false;
+    }
 
     playerStrumline.fadeInArrows();
     opponentStrumline.fadeInArrows();
@@ -2044,6 +2109,10 @@ class PlayState extends MusicBeatSubState
      */
   function updateScoreText():Void
   {
+    var percent:String;
+    if (ratingPercent != 0) percent = Std.string(Math.floor((ratingPercent * 100) * 100) / 100) + '%';
+    else
+      percent = 'N/A';
     // TODO: Add functionality for modules to update the score text.
     if (Preferences.extraScoreInfo)
     {
@@ -2064,7 +2133,7 @@ class PlayState extends MusicBeatSubState
           + missTally
           + ' | Combo: '
           + Highscore.tallies.combo
-          + ' | Accuracy: ? (Not Implemented yet.)';
+          + ' | Accuracy: $ratingFC$percent)';
         scoreText.screenCenter(X);
       }
     }
@@ -2082,6 +2151,7 @@ class PlayState extends MusicBeatSubState
         scoreText.screenCenter(X);
       }
     }
+    if (Preferences.fixScoreOffset) scoreText.y = healthBarBG.y + 50;
   }
 
   /**
@@ -2422,6 +2492,8 @@ class PlayState extends MusicBeatSubState
     else if (notesInDirection.length == 0)
     {
       // Press a key with no penalty.
+      // Play ghost tap anim if its enabled
+      playGhostTapAnim(Preferences.animsGhostTap, input.noteDirection);
 
       // Play the strumline animation.
       playerStrumline.playPress(input.noteDirection);
@@ -2455,6 +2527,11 @@ class PlayState extends MusicBeatSubState
 
       playerStrumline.releaseKey(input.noteDirection);
     }
+  }
+
+  function playGhostTapAnim(bool:Bool, input:NoteDirection):Void
+  {
+    currentStage.getBoyfriend().playSingAnimation(input);
   }
 
   var latencyTween:FlxTween;
@@ -2701,7 +2778,7 @@ class PlayState extends MusicBeatSubState
   /**
      * Handles applying health, score, and ratings.
      */
-  function applyScore(score:Int, daRating:String, healthChange:Float, isComboBreak:Bool)
+  function applyScore(score:Int, daRating:String, healthChange:Float, isComboBreak:Bool):Void
   {
     switch (daRating)
     {
@@ -2726,6 +2803,7 @@ class PlayState extends MusicBeatSubState
         if (currentStage.id != 'limoRideErect' || currentStage.id != 'spookyMansionErect') hitTime.color = 0xFF741F1F;
         if (currentStage.id == 'limoRideErect' || currentStage.id == 'spookyMansionErect') hitTime.color = 0xFF3D3838;
     }
+    totalPlayed++;
     health += healthChange;
     if (isComboBreak)
     {
@@ -2739,6 +2817,20 @@ class PlayState extends MusicBeatSubState
       if (Highscore.tallies.combo > Highscore.tallies.maxCombo) Highscore.tallies.maxCombo = Highscore.tallies.combo;
     }
     songScore += score;
+    ratingPercent = Math.min(1, Math.max(0, Highscore.tallies.totalNotesHit / totalPlayed));
+    ratingFC = ratingStuff[1];
+    var noNoteHit:Bool = (Highscore.tallies.shit == 0 && Highscore.tallies.bad == 0 && Highscore.tallies.good == 0 && Highscore.tallies.sick == 0);
+    if (noNoteHit) ratingFC = ratingStuff[0];
+    if (Highscore.tallies.missed < 1)
+    {
+      if (Highscore.tallies.bad > 0 || Highscore.tallies.shit > 0) ratingFC = ratingStuff[3];
+      else if (Highscore.tallies.good > 0) ratingFC = ratingStuff[4];
+      else if (Highscore.tallies.sick > 0) ratingFC = ratingStuff[5];
+    }
+    else if (Highscore.tallies.missed < 10)
+    {
+      ratingFC = ratingStuff[2];
+    }
   }
 
   /**

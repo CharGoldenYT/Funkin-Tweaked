@@ -953,7 +953,8 @@ class Strumline extends FlxSpriteGroup
   {
     arrow.y -= 10;
     arrow.alpha = 0.0;
-    FlxTween.tween(arrow, {y: arrow.y + 10, alpha: 1}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * index)});
+    var finalAlpha:Float = Preferences.transparentStrumline ? Preferences.laneTransparency : 1;
+    FlxTween.tween(arrow, {y: arrow.y + 10, alpha: finalAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * index)});
   }
 
   public function fadeInArrows():Void

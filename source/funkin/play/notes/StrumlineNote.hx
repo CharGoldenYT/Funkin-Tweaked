@@ -96,6 +96,20 @@ class StrumlineNote extends FlxSprite
   {
     this.animation.play(name, force, reversed, startFrame);
 
+    if (name == 'confirm')
+    {
+      if (Preferences.transparentStrumline)
+      {
+        this.alpha = 1;
+      }
+    }
+    if (name == 'static' || name == 'press')
+    {
+      if (Preferences.transparentStrumline)
+      {
+        this.alpha = Preferences.laneTransparency;
+      }
+    }
     centerOffsets();
     centerOrigin();
   }

@@ -1,0 +1,8 @@
+{
+    "title": "Funkin' Tweaked Assets",
+    "description": "Assets required by Funkin' Tweaked to render custom stuff while staying fully compatible with basegame!",
+    "author": "Char",
+    "api_version": "0.5.0",
+    "mod_version": "1.0.0",
+    "license": "CC BY 4.0,MIT"
+}

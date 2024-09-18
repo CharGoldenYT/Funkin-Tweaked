@@ -118,44 +118,42 @@ class PreferencesMenu extends Page
     createPrefItemCheckbox('Show Timings', 'Shows when you hit a note below the rating', function(value:Bool):Void {
       Preferences.showTimings = value;
     }, Preferences.showTimings);
-    createPrefItemCheckbox('Transparent Strum Line', '(NOT IMPLEMENTED!) Makes the Strum Line transparent', function(value:Bool):Void {
+    createPrefItemCheckbox('Transparent Strum Line', 'Makes the Strum Line transparent', function(value:Bool):Void {
       Preferences.transparentStrumline = value;
     }, Preferences.transparentStrumline);
-    createPrefItemCheckbox('Complex Accuracy', '(NOT IMPLEMENTED!) Factor in hit timing into accuracy.', function(value:Bool):Void {
+    /*createPrefItemCheckbox('Complex Accuracy', '(NOT IMPLEMENTED!) Factor in hit timing into accuracy.', function(value:Bool):Void {
       Preferences.complexAccuracy = value;
-    }, Preferences.complexAccuracy); // Later.
+    }, Preferences.complexAccuracy);*/ // Later.
     createPrefItemCheckbox('Timer Bar', '(NOT IMPLEMENTED!) Show how far you are in a song.', function(value:Bool):Void {
       Preferences.timer = value;
     }, Preferences.timer);
-    createPrefItemCheckbox('Note Lanes', '(NOT IMPLEMENTED!) Adds a slightly transparent lane under the Strumline', function(value:Bool):Void {
+    createPrefItemCheckbox('Note Lanes', 'Adds a slightly transparent lane under the Strumline', function(value:Bool):Void {
       Preferences.lanes = value;
     }, Preferences.lanes);
     /*createPrefItemEnum('Note Skin', '(NOT IMPLEMENTED!) What Note Skin to use when playing a chart', NoteSkinEnum.noteskinOptions, function(value:String) {
       fakeOption = value;
     }, fakeOption);*/
-    createPrefItemCheckbox('Center Strums', '(NOT IMPLEMENTED!) Whether to fix the strum offset.', function(value:Bool):Void {
+    createPrefItemCheckbox('Center Strums', 'Whether to fix the strum offset.', function(value:Bool):Void {
       Preferences.centerStrums = value;
     }, Preferences.centerStrums);
 
     createPrefHeader('Tweaked Extra Options');
 
-    createPrefItemCheckbox('Show Opp Note Lanes', '(NOT IMPLEMENTED!) Whether to show opponent note lanes', function(value:Bool):Void {
+    createPrefItemCheckbox('Show Opp Note Lanes', 'Whether to show opponent note lanes', function(value:Bool):Void {
       Preferences.oppLanes = value;
     }, Preferences.oppLanes);
-    createPrefItemNumber('Strum Transparency', '(NOT IMPLEMENTED!) How transparent should the Strumline (if transparent strum line enabled) be?',
-      function(value:Float):Void {
-        Preferences.strumTransparency = value;
-      }, null, Preferences.strumTransparency, 0, 1, 0.1, 1);
-    createPrefItemNumber('Lane Transparency', '(NOT IMPLEMENTED!) How transparent should the Note Lanes be?', function(value:Float):Void {
+    createPrefItemNumber('Strum Transparency', 'How transparent should the Strumline (if transparent strum line enabled) be?', function(value:Float):Void {
+      Preferences.strumTransparency = value;
+    }, null, Preferences.strumTransparency, 0.1, 1, 0.1, 1);
+    createPrefItemNumber('Lane Transparency', 'How transparent should the Note Lanes be?', function(value:Float):Void {
       Preferences.laneTransparency = value;
-    }, null, Preferences.laneTransparency, 0, 1, 0.1, 1);
-    createPrefItemCheckbox('Ghost Tap Anims', '(NOT IMPLEMENTED!) Whether to show sing animations on ghost tap', function(value:Bool):Void {
+    }, null, Preferences.laneTransparency, 0.1, 1, 0.1, 1);
+    createPrefItemCheckbox('Ghost Tap Anims', 'Whether to show sing animations on ghost tap', function(value:Bool):Void {
       Preferences.animsGhostTap = value;
     }, Preferences.animsGhostTap); // Later.
-    createPrefItemCheckbox('Fix Score Offset', '(NOT IMPLEMENTED!) Whether to properly fix the score text being partially blocked by icons',
-      function(value:Bool):Void {
-        Preferences.fixScoreOffset = value;
-      }, Preferences.fixScoreOffset);
+    createPrefItemCheckbox('Fix Score Offset', 'Whether to properly fix the score text being partially blocked by icons', function(value:Bool):Void {
+      Preferences.fixScoreOffset = value;
+    }, Preferences.fixScoreOffset);
   }
 
   override function update(elapsed:Float):Void

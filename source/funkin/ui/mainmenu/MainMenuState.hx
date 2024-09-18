@@ -27,9 +27,6 @@ import funkin.ui.title.TitleState;
 import funkin.ui.story.StoryMenuState;
 import funkin.ui.Prompt;
 import funkin.util.WindowUtil;
-#if FEATURE_DISCORD_RPC
-import Discord.DiscordClient;
-#end
 #if newgrounds
 import funkin.ui.NgPrompt;
 import io.newgrounds.NG;
@@ -136,7 +133,7 @@ class MainMenuState extends MusicBeatState
     });
 
     createMenuItem('credits', 'mainmenu/credits', function() {
-      startExitState(() -> new funkin.ui.credits.CreditsState());
+      startExitState(() -> new funkin.ui.credits.MainCreditsState());
     });
 
     // Reset position of menu items.

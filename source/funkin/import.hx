@@ -7,6 +7,11 @@ import funkin.Paths;
 import funkin.Preferences;
 import flixel.FlxG; // This one in particular causes a compile error if you're using macros.
 import flixel.system.debug.watch.Tracker;
+// IM TIRED OF RETYPING THIS EVERYWHERE.
+import flixel.FlxSprite;
+#if FEATURE_DISCORD_RPC
+import funkin.api.discord.Discord.DiscordClient;
+#end
 
 // These are great.
 using Lambda;

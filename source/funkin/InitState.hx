@@ -35,9 +35,6 @@ import funkin.util.CLIUtil;
 import funkin.util.CLIUtil.CLIParams;
 import funkin.util.TimerUtil;
 import funkin.util.TrackerUtil;
-#if FEATURE_DISCORD_RPC
-import Discord.DiscordClient;
-#end
 
 /**
  * A core class which performs initialization of the game.
