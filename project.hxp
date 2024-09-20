@@ -225,6 +225,12 @@ class Project extends HXProject {
 	 */
 	static final FEATURE_GHOST_TAPPING:FeatureFlag = "FEATURE_GHOST_TAPPING";
 
+	/**
+	 * `-DCHECK_FOR_UPDATES`
+	 * If this flag is enabled, will check the Funkin' Tweaked github for new versions upon title state.
+	 */
+	static final CHECK_FOR_UPDATES:FeatureFlag = 'CHECK_FOR_UPDATES';
+
 	//
 	// CONFIGURATION FUNCTIONS
 	//
@@ -441,7 +447,7 @@ class Project extends HXProject {
 		GITHUB_BUILD.apply(this, false);
 		FEATURE_STAGE_EDITOR.apply(this, false);
 		FEATURE_NEWGROUNDS.apply(this, false);
-		FEATURE_GHOST_TAPPING.apply(this, false); // Yummy ghost tapping - Char
+		FEATURE_GHOST_TAPPING.apply(this, false);
 
 		// Should be true unless explicitly requested.
 		HARDCODED_CREDITS.apply(this, true);
@@ -478,6 +484,11 @@ class Project extends HXProject {
 		// Should be true except on web builds.
 		// Chart editor doesn't work there.
 		FEATURE_CHART_EDITOR.apply(this, !isWeb());
+
+		/**
+		 * Should be true if `-DOfficialBuild`.
+		 */
+		CHECK_FOR_UPDATES.apply(this, #if OfficialBuild true #else false #end);
 	}
 
   /**
