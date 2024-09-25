@@ -28,6 +28,11 @@ class Constants
   public static var VERSION(get, never):String;
 
   /**
+   * The version used for displaying the version of funkin tweaked
+   */
+  public static final TWEAKED_VERSION:String = '0.7b-3 - Prototype';
+
+  /**
    * The generatedBy string embedded in the chart files made by this application.
    */
   public static var GENERATED_BY(get, never):String;

@@ -8,6 +8,8 @@ import funkin.data.song.SongData.SongEventData;
 import funkin.play.event.SongEvent;
 import funkin.data.event.SongEventSchema;
 import funkin.data.event.SongEventSchema.SongEventFieldType;
+//  FlxColor for Time Bar
+import flixel.util.FlxColor;
 
 /**
  * This class represents a handler for a type of song event.
@@ -80,11 +82,10 @@ class FocusCameraSongEvent extends SongEvent
     // Get target position based on char.
     var targetX:Float = posX;
     var targetY:Float = posY;
-
     switch (char)
     {
       case -1: // Position ("focus" on origin)
-        //trace('Focusing camera on static position.');
+        trace('Focusing camera on static position.');
 
       case 0: // Boyfriend (focus on player)
         if (currentStage.getBoyfriend() == null)
@@ -92,10 +93,15 @@ class FocusCameraSongEvent extends SongEvent
           trace('No BF to focus on.');
           return;
         }
-        //trace('Focusing camera on player.');
+        // trace('Focusing camera on player.');
         var bfPoint = currentStage.getBoyfriend().cameraFocusPoint;
+        var bfColors = currentStage.getBoyfriend().healthBarColor;
         targetX += bfPoint.x;
         targetY += bfPoint.y;
+        if (!PlayState.instance.blockTimeBarColorChange && bfColors.length == 3)
+        {
+          PlayState.instance.timeBar.setColors(FlxColor.fromRGB(bfColors[0], bfColors[1], bfColors[2]));
+        }
 
       case 1: // Dad (focus on opponent)
         if (currentStage.getDad() == null)
@@ -103,10 +109,15 @@ class FocusCameraSongEvent extends SongEvent
           trace('No dad to focus on.');
           return;
         }
-        //trace('Focusing camera on opponent.');
+        // trace('Focusing camera on opponent.');
         var dadPoint = currentStage.getDad().cameraFocusPoint;
+        var dadColors = currentStage.getDad().healthBarColor;
         targetX += dadPoint.x;
         targetY += dadPoint.y;
+        if (!PlayState.instance.blockTimeBarColorChange && dadColors.length == 3)
+        {
+          PlayState.instance.timeBar.setColors(FlxColor.fromRGB(dadColors[0], dadColors[1], dadColors[2]));
+        }
 
       case 2: // Girlfriend (focus on girlfriend)
         if (currentStage.getGirlfriend() == null)
@@ -114,7 +125,7 @@ class FocusCameraSongEvent extends SongEvent
           trace('No GF to focus on.');
           return;
         }
-        //trace('Focusing camera on girlfriend.');
+        // trace('Focusing camera on girlfriend.');
         var gfPoint = currentStage.getGirlfriend().cameraFocusPoint;
         targetX += gfPoint.x;
         targetY += gfPoint.y;

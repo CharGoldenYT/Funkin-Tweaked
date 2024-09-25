@@ -40,6 +40,7 @@ import funkin.play.character.CharacterData.CharacterDataParser;
 import funkin.play.components.ComboMilestone;
 import funkin.play.components.HealthIcon;
 import funkin.play.components.PopUpStuff;
+import funkin.play.components.TimeBar;
 import funkin.play.cutscene.dialogue.Conversation;
 import funkin.play.cutscene.VanillaCutscenes;
 import funkin.play.cutscene.VideoCutscene;
@@ -222,6 +223,16 @@ class PlayState extends MusicBeatSubState
    * What shows on the score text
    */
   public var ratingFC:String = '? (';
+
+  /**
+   * The text that shows above the timeBar!
+   */
+  public var timeText:FlxText;
+
+  /**
+   * Makes the Time Bar Color not change on camera focus.
+   */
+  public var blockTimeBarColorChange:Bool = false;
 
   /**
    * Array of what to show on the scoreText.
@@ -501,6 +512,16 @@ class PlayState extends MusicBeatSubState
    * Emma says the image is slightly skewed so I'm leaving it as an image instead of a `createGraphic`.
    */
   public var healthBarBG:FunkinSprite;
+
+  /**
+   * The amount of song played compared to max length
+   */
+  public var songPercent:Float = 0;
+
+  /**
+   * The bar which displays time remaining.
+   */
+  public var timeBar:TimeBar;
 
   /**
    * The health icon representing the player.
@@ -853,6 +874,12 @@ class PlayState extends MusicBeatSubState
     return true;
   }
 
+  public var songLength:Float;
+
+  var setTotalTime:Bool = false;
+
+  public var conductorPos:Float = 0;
+
   public override function update(elapsed:Float):Void
   {
     // TOTAL: 9.42% CPU Time when profiled in VS 2019.
@@ -938,6 +965,8 @@ class PlayState extends MusicBeatSubState
       ratingFC = '? (';
       ratingPercent = 0;
       totalPlayed = 0;
+      timeBar.alpha = 0;
+      timeText.alpha = 0;
       Countdown.performCountdown();
 
       needsReset = false;
@@ -966,6 +995,22 @@ class PlayState extends MusicBeatSubState
 
       Conductor.instance.update(); // Normal conductor update.
     }
+
+    if (!setTotalTime) songLength = currentSongLengthMs;
+    // For soft modding reasons, this only needs to be done until songLength no longer equals 0.
+    if (songLength > 0) setTotalTime = true;
+    songPercent = Math.max(0, Conductor.instance.songPosition) / songLength;
+    var conductorPos:Float = Conductor.instance.songPosition < 0 ? 0 : Conductor.instance.songPosition;
+    var songPos:Float = conductorPos;
+
+    var songPosString:String = '';
+    if (songPos > 0) songPosString = FlxStringUtil.formatTime(songPos / 1000) + ' / ';
+
+    var songL:String = '';
+    songL = songLength > 0 ? FlxStringUtil.formatTime(songLength / 1000) : '';
+
+    timeText.text = songPosString + songL;
+    timeText.screenCenter(X);
 
     var androidPause:Bool = false;
 
@@ -1601,10 +1646,40 @@ class PlayState extends MusicBeatSubState
     scoreText.zIndex = 802;
     add(scoreText);
 
+    timeBar = new TimeBar(0, 20, 'timeBar', function() return songPercent, 0, 1);
+    timeBar.scrollFactor.set();
+    timeBar.zIndex = 803;
+    timeBar.screenCenter(X);
+    if (dad.healthBarColor.length == 3) timeBar.setColors(red);
+    timeBar.alpha = 0;
+    add(timeBar);
+
+    /*var testBar = new TimeBar(0, 300, 'fakeImg', function() return songPercent, 0, 1);
+        // this was a test of whether my backup shit works! and it did! after much troubleshooting...
+            testBar.scrollFactor.set();
+            testBar.zIndex = 803;
+            testBar.screenCenter(X);
+            if (dad.healthBarColor.length == 3) testBar.setColors(red);
+            add(testBar); */
+
+    // The text that tells you how long till the song is over.
+    timeText = new FlxText(0, 0, timeBar.width, "", 25);
+    timeText.setFormat(Paths.font('vcr.ttf'), 25, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+    timeText.scrollFactor.set();
+    timeText.zIndex = 804;
+    timeText.screenCenter(X);
+    timeText.y = 25;
+    timeText.alpha = 0;
+    add(timeText);
+    if (!Preferences.timer) timeText.visible = false;
+
     // Move the health bar to the HUD camera.
     healthBar.cameras = [camHUD];
     healthBarBG.cameras = [camHUD];
     scoreText.cameras = [camHUD];
+    // While testing a port over, i forgor'd these next 2 lines
+    timeBar.cameras = [camHUD];
+    timeText.cameras = [camHUD];
   }
 
   /**
@@ -2036,6 +2111,8 @@ class PlayState extends MusicBeatSubState
      */
   function startSong():Void
   {
+    FlxTween.tween(timeBar, {alpha: 1}, 1);
+    FlxTween.tween(timeText, {alpha: 1}, 1); // fix for incorrect shit lmao
     startingSong = false;
 
     if (!overrideMusic && !isGamePaused && currentChart != null)

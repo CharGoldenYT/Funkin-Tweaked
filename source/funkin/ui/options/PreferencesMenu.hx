@@ -124,7 +124,7 @@ class PreferencesMenu extends Page
     /*createPrefItemCheckbox('Complex Accuracy', '(NOT IMPLEMENTED!) Factor in hit timing into accuracy.', function(value:Bool):Void {
       Preferences.complexAccuracy = value;
     }, Preferences.complexAccuracy);*/ // Later.
-    createPrefItemCheckbox('Timer Bar', '(NOT IMPLEMENTED!) Show how far you are in a song.', function(value:Bool):Void {
+    createPrefItemCheckbox('Timer Bar', 'Show how far you are in a song.', function(value:Bool):Void {
       Preferences.timer = value;
     }, Preferences.timer);
     createPrefItemCheckbox('Note Lanes', 'Adds a slightly transparent lane under the Strumline', function(value:Bool):Void {

@@ -231,6 +231,12 @@ class Project extends HXProject {
 	 */
 	static final CHECK_FOR_UPDATES:FeatureFlag = 'CHECK_FOR_UPDATES';
 
+	/**
+	 * `-DOfficialBuild`
+	 * If this flag enabled, will signify an official build and activate other flags/features
+	 */
+	static final OfficialBuild:FeatureFlag = 'OfficialBuild';
+
 	//
 	// CONFIGURATION FUNCTIONS
 	//
@@ -448,6 +454,7 @@ class Project extends HXProject {
 		FEATURE_STAGE_EDITOR.apply(this, false);
 		FEATURE_NEWGROUNDS.apply(this, false);
 		FEATURE_GHOST_TAPPING.apply(this, false);
+		OfficialBuild.apply(this, false);
 
 		// Should be true unless explicitly requested.
 		HARDCODED_CREDITS.apply(this, true);
@@ -704,6 +711,11 @@ class Project extends HXProject {
 		addAsset("art/readme.txt", "do NOT readme.txt", "art", shouldEmbedArt);
 		addAsset("LICENSE.md", "LICENSE.md", "art", shouldEmbedArt);
 		addAsset("CHANGELOG.md", "CHANGELOG.md", "art", shouldEmbedArt);
+
+		// Mod folder
+		#if INCLUDE_MOD_ASSETS
+		addAssetPath('example_mods/tweakedAssets', 'mods/tweakedAssets', 'default', ['*'], false, false);
+		#end
 	}
 
   /**
