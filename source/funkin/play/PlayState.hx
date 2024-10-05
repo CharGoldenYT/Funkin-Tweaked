@@ -2206,7 +2206,8 @@ class PlayState extends MusicBeatSubState
       {
         // TODO: Add an option for this maybe?
         var commaSeparated:Bool = true;
-        scoreText.text = 'Score: ${FlxStringUtil.formatMoney(songScore, false, commaSeparated)} | Misses: '
+        var missString = Preferences.badsShitsCauseMiss ? 'Combo Breaks' : 'Misses';
+        scoreText.text = 'Score: ${FlxStringUtil.formatMoney(songScore, false, commaSeparated)} | $missString: '
           + missTally
           + ' | Combo: '
           + Highscore.tallies.combo

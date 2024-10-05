@@ -30,7 +30,7 @@ class Constants
   /**
    * The version used for displaying the version of funkin tweaked
    */
-  public static final TWEAKED_VERSION:String = '0.7b-3 - Prototype';
+  public static final TWEAKED_VERSION:String = '0.7b-3 Hotfix';
 
   /**
    * The generatedBy string embedded in the chart files made by this application.
